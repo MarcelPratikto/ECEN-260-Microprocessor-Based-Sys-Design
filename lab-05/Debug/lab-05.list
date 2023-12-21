@@ -1,0 +1,623 @@
+
+lab-05.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   00000184  08000000  08000000  00010000  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  1 .text         000003b0  08000184  08000184  00010184  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       00000000  08000534  08000534  00020010  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  3 .ARM.extab    00000000  08000534  08000534  00020010  2**0
+                  CONTENTS
+  4 .ARM          00000000  08000534  08000534  00020010  2**0
+                  CONTENTS
+  5 .preinit_array 00000000  08000534  08000534  00020010  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000004  08000534  08000534  00010534  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  7 .fini_array   00000004  08000538  08000538  00010538  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  8 .data         00000010  20000000  0800053c  00020000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .sram2        00000000  10000000  10000000  00020010  2**0
+                  CONTENTS
+ 10 .bss          0000001c  20000010  20000010  00020010  2**2
+                  ALLOC
+ 11 ._user_heap_stack 00000604  2000002c  2000002c  00020010  2**0
+                  ALLOC
+ 12 .ARM.attributes 00000030  00000000  00000000  00020010  2**0
+                  CONTENTS, READONLY
+ 13 .comment      00000043  00000000  00000000  00020040  2**0
+                  CONTENTS, READONLY
+ 14 .debug_info   0000012c  00000000  00000000  00020083  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 15 .debug_abbrev 000000ce  00000000  00000000  000201af  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 16 .debug_aranges 00000048  00000000  00000000  00020280  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 17 .debug_rnglists 0000002d  00000000  00000000  000202c8  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 18 .debug_macro  00000afb  00000000  00000000  000202f5  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 19 .debug_line   0000012e  00000000  00000000  00020df0  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 20 .debug_str    00002edb  00000000  00000000  00020f1e  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 21 .debug_frame  00000058  00000000  00000000  00023dfc  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 22 .debug_line_str 00000063  00000000  00000000  00023e54  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+
+Disassembly of section .text:
+
+08000184 <__do_global_dtors_aux>:
+ 8000184:	b510      	push	{r4, lr}
+ 8000186:	4c05      	ldr	r4, [pc, #20]	; (800019c <__do_global_dtors_aux+0x18>)
+ 8000188:	7823      	ldrb	r3, [r4, #0]
+ 800018a:	b933      	cbnz	r3, 800019a <__do_global_dtors_aux+0x16>
+ 800018c:	4b04      	ldr	r3, [pc, #16]	; (80001a0 <__do_global_dtors_aux+0x1c>)
+ 800018e:	b113      	cbz	r3, 8000196 <__do_global_dtors_aux+0x12>
+ 8000190:	4804      	ldr	r0, [pc, #16]	; (80001a4 <__do_global_dtors_aux+0x20>)
+ 8000192:	f3af 8000 	nop.w
+ 8000196:	2301      	movs	r3, #1
+ 8000198:	7023      	strb	r3, [r4, #0]
+ 800019a:	bd10      	pop	{r4, pc}
+ 800019c:	20000010 	.word	0x20000010
+ 80001a0:	00000000 	.word	0x00000000
+ 80001a4:	0800051c 	.word	0x0800051c
+
+080001a8 <frame_dummy>:
+ 80001a8:	b508      	push	{r3, lr}
+ 80001aa:	4b03      	ldr	r3, [pc, #12]	; (80001b8 <frame_dummy+0x10>)
+ 80001ac:	b11b      	cbz	r3, 80001b6 <frame_dummy+0xe>
+ 80001ae:	4903      	ldr	r1, [pc, #12]	; (80001bc <frame_dummy+0x14>)
+ 80001b0:	4803      	ldr	r0, [pc, #12]	; (80001c0 <frame_dummy+0x18>)
+ 80001b2:	f3af 8000 	nop.w
+ 80001b6:	bd08      	pop	{r3, pc}
+ 80001b8:	00000000 	.word	0x00000000
+ 80001bc:	20000014 	.word	0x20000014
+ 80001c0:	0800051c 	.word	0x0800051c
+
+080001c4 <main>:
+#define ArmStatusPin 5		// PA5 (Board User LED2)
+#define FrontAlarmPin 6		// PA6
+#define BackAlarmPin 7		// PA7
+#define WindowAlarmPin 6	// PB6
+int main(void)
+{
+ 80001c4:	b480      	push	{r7}
+ 80001c6:	b083      	sub	sp, #12
+ 80001c8:	af00      	add	r7, sp, #0
+	// Turn on GPIO clocks (Ports A, B, and C)
+	*AHB2ENR |= 0b111;
+ 80001ca:	4b91      	ldr	r3, [pc, #580]	; (8000410 <main+0x24c>)
+ 80001cc:	681b      	ldr	r3, [r3, #0]
+ 80001ce:	681a      	ldr	r2, [r3, #0]
+ 80001d0:	4b8f      	ldr	r3, [pc, #572]	; (8000410 <main+0x24c>)
+ 80001d2:	681b      	ldr	r3, [r3, #0]
+ 80001d4:	f042 0207 	orr.w	r2, r2, #7
+ 80001d8:	601a      	str	r2, [r3, #0]
+	/* Part 2. Typed by Marcel Pratikto. */
+	// Configure button pin as inputs
+	GPIOC->MODER &= ~(0b11 << (ArmButtonPin*2));	// configure ArmButtonPin as input		00 = MODER input
+ 80001da:	4b8e      	ldr	r3, [pc, #568]	; (8000414 <main+0x250>)
+ 80001dc:	681b      	ldr	r3, [r3, #0]
+ 80001de:	681a      	ldr	r2, [r3, #0]
+ 80001e0:	4b8c      	ldr	r3, [pc, #560]	; (8000414 <main+0x250>)
+ 80001e2:	681b      	ldr	r3, [r3, #0]
+ 80001e4:	f022 6240 	bic.w	r2, r2, #201326592	; 0xc000000
+ 80001e8:	601a      	str	r2, [r3, #0]
+	GPIOC->MODER &= ~(0b11 << (DisarmButtonPin*2));	// configure DisarmButtonPin as input
+ 80001ea:	4b8a      	ldr	r3, [pc, #552]	; (8000414 <main+0x250>)
+ 80001ec:	681b      	ldr	r3, [r3, #0]
+ 80001ee:	681a      	ldr	r2, [r3, #0]
+ 80001f0:	4b88      	ldr	r3, [pc, #544]	; (8000414 <main+0x250>)
+ 80001f2:	681b      	ldr	r3, [r3, #0]
+ 80001f4:	f422 3240 	bic.w	r2, r2, #196608	; 0x30000
+ 80001f8:	601a      	str	r2, [r3, #0]
+	// Configure reed switch pins as inputs
+	GPIOA->MODER &= ~(0b11 << (FrontSensorPin*2));	// configure FrontSensorPin as input
+ 80001fa:	4b87      	ldr	r3, [pc, #540]	; (8000418 <main+0x254>)
+ 80001fc:	681b      	ldr	r3, [r3, #0]
+ 80001fe:	681a      	ldr	r2, [r3, #0]
+ 8000200:	4b85      	ldr	r3, [pc, #532]	; (8000418 <main+0x254>)
+ 8000202:	681b      	ldr	r3, [r3, #0]
+ 8000204:	f022 0203 	bic.w	r2, r2, #3
+ 8000208:	601a      	str	r2, [r3, #0]
+	GPIOA->MODER &= ~(0b11 << (BackSensorPin*2));	// configure BackSensorPin as input
+ 800020a:	4b83      	ldr	r3, [pc, #524]	; (8000418 <main+0x254>)
+ 800020c:	681b      	ldr	r3, [r3, #0]
+ 800020e:	681a      	ldr	r2, [r3, #0]
+ 8000210:	4b81      	ldr	r3, [pc, #516]	; (8000418 <main+0x254>)
+ 8000212:	681b      	ldr	r3, [r3, #0]
+ 8000214:	f022 020c 	bic.w	r2, r2, #12
+ 8000218:	601a      	str	r2, [r3, #0]
+	GPIOA->MODER &= ~(0b11 << (WindowSensorPin*2));	// configure WindowSensorPin as input
+ 800021a:	4b7f      	ldr	r3, [pc, #508]	; (8000418 <main+0x254>)
+ 800021c:	681b      	ldr	r3, [r3, #0]
+ 800021e:	681a      	ldr	r2, [r3, #0]
+ 8000220:	4b7d      	ldr	r3, [pc, #500]	; (8000418 <main+0x254>)
+ 8000222:	681b      	ldr	r3, [r3, #0]
+ 8000224:	f422 7240 	bic.w	r2, r2, #768	; 0x300
+ 8000228:	601a      	str	r2, [r3, #0]
+	/* Part 3. Typed by Marcel Pratikto. */
+	// Enable pull resistors
+	GPIOC->PUPDR &= ~(0b11 << (ArmButtonPin*2));	// configure pull-up resistor for ArmButtonPin (reset)
+ 800022a:	4b7a      	ldr	r3, [pc, #488]	; (8000414 <main+0x250>)
+ 800022c:	681b      	ldr	r3, [r3, #0]
+ 800022e:	68da      	ldr	r2, [r3, #12]
+ 8000230:	4b78      	ldr	r3, [pc, #480]	; (8000414 <main+0x250>)
+ 8000232:	681b      	ldr	r3, [r3, #0]
+ 8000234:	f022 6240 	bic.w	r2, r2, #201326592	; 0xc000000
+ 8000238:	60da      	str	r2, [r3, #12]
+	GPIOC->PUPDR |= (0b01 << (ArmButtonPin*2));		// (set) 01 = PUPDR pull-up enable
+ 800023a:	4b76      	ldr	r3, [pc, #472]	; (8000414 <main+0x250>)
+ 800023c:	681b      	ldr	r3, [r3, #0]
+ 800023e:	68da      	ldr	r2, [r3, #12]
+ 8000240:	4b74      	ldr	r3, [pc, #464]	; (8000414 <main+0x250>)
+ 8000242:	681b      	ldr	r3, [r3, #0]
+ 8000244:	f042 6280 	orr.w	r2, r2, #67108864	; 0x4000000
+ 8000248:	60da      	str	r2, [r3, #12]
+	GPIOC->PUPDR &= ~(0b11 << (DisarmButtonPin*2));	// configure pull-up resistor for DisarmButtonPin (reset)
+ 800024a:	4b72      	ldr	r3, [pc, #456]	; (8000414 <main+0x250>)
+ 800024c:	681b      	ldr	r3, [r3, #0]
+ 800024e:	68da      	ldr	r2, [r3, #12]
+ 8000250:	4b70      	ldr	r3, [pc, #448]	; (8000414 <main+0x250>)
+ 8000252:	681b      	ldr	r3, [r3, #0]
+ 8000254:	f422 3240 	bic.w	r2, r2, #196608	; 0x30000
+ 8000258:	60da      	str	r2, [r3, #12]
+	GPIOC->PUPDR |= (0b01 << (DisarmButtonPin*2));	// (set)
+ 800025a:	4b6e      	ldr	r3, [pc, #440]	; (8000414 <main+0x250>)
+ 800025c:	681b      	ldr	r3, [r3, #0]
+ 800025e:	68da      	ldr	r2, [r3, #12]
+ 8000260:	4b6c      	ldr	r3, [pc, #432]	; (8000414 <main+0x250>)
+ 8000262:	681b      	ldr	r3, [r3, #0]
+ 8000264:	f442 3280 	orr.w	r2, r2, #65536	; 0x10000
+ 8000268:	60da      	str	r2, [r3, #12]
+	GPIOA->PUPDR &= ~(0b11 << (FrontSensorPin*2));	// configure pull-up resistor for FrontSensorPin (reset)
+ 800026a:	4b6b      	ldr	r3, [pc, #428]	; (8000418 <main+0x254>)
+ 800026c:	681b      	ldr	r3, [r3, #0]
+ 800026e:	68da      	ldr	r2, [r3, #12]
+ 8000270:	4b69      	ldr	r3, [pc, #420]	; (8000418 <main+0x254>)
+ 8000272:	681b      	ldr	r3, [r3, #0]
+ 8000274:	f022 0203 	bic.w	r2, r2, #3
+ 8000278:	60da      	str	r2, [r3, #12]
+	GPIOA->PUPDR |= (0b01 << (FrontSensorPin*2));	// (set)
+ 800027a:	4b67      	ldr	r3, [pc, #412]	; (8000418 <main+0x254>)
+ 800027c:	681b      	ldr	r3, [r3, #0]
+ 800027e:	68da      	ldr	r2, [r3, #12]
+ 8000280:	4b65      	ldr	r3, [pc, #404]	; (8000418 <main+0x254>)
+ 8000282:	681b      	ldr	r3, [r3, #0]
+ 8000284:	f042 0201 	orr.w	r2, r2, #1
+ 8000288:	60da      	str	r2, [r3, #12]
+	GPIOA->PUPDR &= ~(0b11 << (BackSensorPin*2));	// configure pull-up resistor for BackSensorPin (reset)
+ 800028a:	4b63      	ldr	r3, [pc, #396]	; (8000418 <main+0x254>)
+ 800028c:	681b      	ldr	r3, [r3, #0]
+ 800028e:	68da      	ldr	r2, [r3, #12]
+ 8000290:	4b61      	ldr	r3, [pc, #388]	; (8000418 <main+0x254>)
+ 8000292:	681b      	ldr	r3, [r3, #0]
+ 8000294:	f022 020c 	bic.w	r2, r2, #12
+ 8000298:	60da      	str	r2, [r3, #12]
+	GPIOA->PUPDR |= (0b01 << (BackSensorPin*2));	// (set)
+ 800029a:	4b5f      	ldr	r3, [pc, #380]	; (8000418 <main+0x254>)
+ 800029c:	681b      	ldr	r3, [r3, #0]
+ 800029e:	68da      	ldr	r2, [r3, #12]
+ 80002a0:	4b5d      	ldr	r3, [pc, #372]	; (8000418 <main+0x254>)
+ 80002a2:	681b      	ldr	r3, [r3, #0]
+ 80002a4:	f042 0204 	orr.w	r2, r2, #4
+ 80002a8:	60da      	str	r2, [r3, #12]
+	GPIOA->PUPDR &= ~(0b11 << (WindowSensorPin*2));	// configure pull-up resistor for WindowSensorPin (reset)
+ 80002aa:	4b5b      	ldr	r3, [pc, #364]	; (8000418 <main+0x254>)
+ 80002ac:	681b      	ldr	r3, [r3, #0]
+ 80002ae:	68da      	ldr	r2, [r3, #12]
+ 80002b0:	4b59      	ldr	r3, [pc, #356]	; (8000418 <main+0x254>)
+ 80002b2:	681b      	ldr	r3, [r3, #0]
+ 80002b4:	f422 7240 	bic.w	r2, r2, #768	; 0x300
+ 80002b8:	60da      	str	r2, [r3, #12]
+	GPIOA->PUPDR |= (0b01 << (WindowSensorPin*2));	// (set)
+ 80002ba:	4b57      	ldr	r3, [pc, #348]	; (8000418 <main+0x254>)
+ 80002bc:	681b      	ldr	r3, [r3, #0]
+ 80002be:	68da      	ldr	r2, [r3, #12]
+ 80002c0:	4b55      	ldr	r3, [pc, #340]	; (8000418 <main+0x254>)
+ 80002c2:	681b      	ldr	r3, [r3, #0]
+ 80002c4:	f442 7280 	orr.w	r2, r2, #256	; 0x100
+ 80002c8:	60da      	str	r2, [r3, #12]
+	/* Part 4. Typed by Marcel Pratikto. */
+	// Configure LED pins as outputs
+	GPIOA->MODER &= ~(0b11 << (ArmStatusPin*2)) ;	// configure ArmStatusPin as output (reset)
+ 80002ca:	4b53      	ldr	r3, [pc, #332]	; (8000418 <main+0x254>)
+ 80002cc:	681b      	ldr	r3, [r3, #0]
+ 80002ce:	681a      	ldr	r2, [r3, #0]
+ 80002d0:	4b51      	ldr	r3, [pc, #324]	; (8000418 <main+0x254>)
+ 80002d2:	681b      	ldr	r3, [r3, #0]
+ 80002d4:	f422 6240 	bic.w	r2, r2, #3072	; 0xc00
+ 80002d8:	601a      	str	r2, [r3, #0]
+	GPIOA->MODER |= (0b01 << (ArmStatusPin*2)) ;	// (set) 01 = MODER output
+ 80002da:	4b4f      	ldr	r3, [pc, #316]	; (8000418 <main+0x254>)
+ 80002dc:	681b      	ldr	r3, [r3, #0]
+ 80002de:	681a      	ldr	r2, [r3, #0]
+ 80002e0:	4b4d      	ldr	r3, [pc, #308]	; (8000418 <main+0x254>)
+ 80002e2:	681b      	ldr	r3, [r3, #0]
+ 80002e4:	f442 6280 	orr.w	r2, r2, #1024	; 0x400
+ 80002e8:	601a      	str	r2, [r3, #0]
+	GPIOA->MODER &= ~(0b11 << (FrontAlarmPin*2));	// configure FrontAlarmPin as output (reset)
+ 80002ea:	4b4b      	ldr	r3, [pc, #300]	; (8000418 <main+0x254>)
+ 80002ec:	681b      	ldr	r3, [r3, #0]
+ 80002ee:	681a      	ldr	r2, [r3, #0]
+ 80002f0:	4b49      	ldr	r3, [pc, #292]	; (8000418 <main+0x254>)
+ 80002f2:	681b      	ldr	r3, [r3, #0]
+ 80002f4:	f422 5240 	bic.w	r2, r2, #12288	; 0x3000
+ 80002f8:	601a      	str	r2, [r3, #0]
+	GPIOA->MODER |= (0b01 << (FrontAlarmPin*2));	// (set)
+ 80002fa:	4b47      	ldr	r3, [pc, #284]	; (8000418 <main+0x254>)
+ 80002fc:	681b      	ldr	r3, [r3, #0]
+ 80002fe:	681a      	ldr	r2, [r3, #0]
+ 8000300:	4b45      	ldr	r3, [pc, #276]	; (8000418 <main+0x254>)
+ 8000302:	681b      	ldr	r3, [r3, #0]
+ 8000304:	f442 5280 	orr.w	r2, r2, #4096	; 0x1000
+ 8000308:	601a      	str	r2, [r3, #0]
+	GPIOA->MODER &= ~(0b11 << (BackAlarmPin*2));	// configure BackAlarmPin as output (reset)
+ 800030a:	4b43      	ldr	r3, [pc, #268]	; (8000418 <main+0x254>)
+ 800030c:	681b      	ldr	r3, [r3, #0]
+ 800030e:	681a      	ldr	r2, [r3, #0]
+ 8000310:	4b41      	ldr	r3, [pc, #260]	; (8000418 <main+0x254>)
+ 8000312:	681b      	ldr	r3, [r3, #0]
+ 8000314:	f422 4240 	bic.w	r2, r2, #49152	; 0xc000
+ 8000318:	601a      	str	r2, [r3, #0]
+	GPIOA->MODER |= (0b01 << (BackAlarmPin*2));		// (set)
+ 800031a:	4b3f      	ldr	r3, [pc, #252]	; (8000418 <main+0x254>)
+ 800031c:	681b      	ldr	r3, [r3, #0]
+ 800031e:	681a      	ldr	r2, [r3, #0]
+ 8000320:	4b3d      	ldr	r3, [pc, #244]	; (8000418 <main+0x254>)
+ 8000322:	681b      	ldr	r3, [r3, #0]
+ 8000324:	f442 4280 	orr.w	r2, r2, #16384	; 0x4000
+ 8000328:	601a      	str	r2, [r3, #0]
+	GPIOB->MODER &= ~(0b11 << (WindowAlarmPin*2));	// configure WindowAlarmPin as output (reset)
+ 800032a:	4b3c      	ldr	r3, [pc, #240]	; (800041c <main+0x258>)
+ 800032c:	681b      	ldr	r3, [r3, #0]
+ 800032e:	681a      	ldr	r2, [r3, #0]
+ 8000330:	4b3a      	ldr	r3, [pc, #232]	; (800041c <main+0x258>)
+ 8000332:	681b      	ldr	r3, [r3, #0]
+ 8000334:	f422 5240 	bic.w	r2, r2, #12288	; 0x3000
+ 8000338:	601a      	str	r2, [r3, #0]
+	GPIOB->MODER |= (0b01 << (WindowAlarmPin*2));	// (set)
+ 800033a:	4b38      	ldr	r3, [pc, #224]	; (800041c <main+0x258>)
+ 800033c:	681b      	ldr	r3, [r3, #0]
+ 800033e:	681a      	ldr	r2, [r3, #0]
+ 8000340:	4b36      	ldr	r3, [pc, #216]	; (800041c <main+0x258>)
+ 8000342:	681b      	ldr	r3, [r3, #0]
+ 8000344:	f442 5280 	orr.w	r2, r2, #4096	; 0x1000
+ 8000348:	601a      	str	r2, [r3, #0]
+
+	// Initialize Alarm Status (turn off all LEDs)
+	GPIOA->ODR &= ~(1 << ArmStatusPin);
+ 800034a:	4b33      	ldr	r3, [pc, #204]	; (8000418 <main+0x254>)
+ 800034c:	681b      	ldr	r3, [r3, #0]
+ 800034e:	695a      	ldr	r2, [r3, #20]
+ 8000350:	4b31      	ldr	r3, [pc, #196]	; (8000418 <main+0x254>)
+ 8000352:	681b      	ldr	r3, [r3, #0]
+ 8000354:	f022 0220 	bic.w	r2, r2, #32
+ 8000358:	615a      	str	r2, [r3, #20]
+	GPIOA->ODR &= ~(1 << FrontAlarmPin);
+ 800035a:	4b2f      	ldr	r3, [pc, #188]	; (8000418 <main+0x254>)
+ 800035c:	681b      	ldr	r3, [r3, #0]
+ 800035e:	695a      	ldr	r2, [r3, #20]
+ 8000360:	4b2d      	ldr	r3, [pc, #180]	; (8000418 <main+0x254>)
+ 8000362:	681b      	ldr	r3, [r3, #0]
+ 8000364:	f022 0240 	bic.w	r2, r2, #64	; 0x40
+ 8000368:	615a      	str	r2, [r3, #20]
+	GPIOA->ODR &= ~(1 << BackAlarmPin);
+ 800036a:	4b2b      	ldr	r3, [pc, #172]	; (8000418 <main+0x254>)
+ 800036c:	681b      	ldr	r3, [r3, #0]
+ 800036e:	695a      	ldr	r2, [r3, #20]
+ 8000370:	4b29      	ldr	r3, [pc, #164]	; (8000418 <main+0x254>)
+ 8000372:	681b      	ldr	r3, [r3, #0]
+ 8000374:	f022 0280 	bic.w	r2, r2, #128	; 0x80
+ 8000378:	615a      	str	r2, [r3, #20]
+	GPIOB->ODR &= ~(1 << WindowAlarmPin);
+ 800037a:	4b28      	ldr	r3, [pc, #160]	; (800041c <main+0x258>)
+ 800037c:	681b      	ldr	r3, [r3, #0]
+ 800037e:	695a      	ldr	r2, [r3, #20]
+ 8000380:	4b26      	ldr	r3, [pc, #152]	; (800041c <main+0x258>)
+ 8000382:	681b      	ldr	r3, [r3, #0]
+ 8000384:	f022 0240 	bic.w	r2, r2, #64	; 0x40
+ 8000388:	615a      	str	r2, [r3, #20]
+	// armed state (initialize to disarm)
+	int armed = 0;
+ 800038a:	2300      	movs	r3, #0
+ 800038c:	607b      	str	r3, [r7, #4]
+//			GPIOA->ODR &= ~(1 << FrontAlarmPin);
+//			GPIOA->ODR &= ~(1 << BackAlarmPin);
+//			GPIOB->ODR &= ~(1 << WindowAlarmPin);
+//		}
+		// TODO
+		if ((GPIOC->IDR & (1 << ArmButtonPin)) == (0 << ArmButtonPin)){
+ 800038e:	4b21      	ldr	r3, [pc, #132]	; (8000414 <main+0x250>)
+ 8000390:	681b      	ldr	r3, [r3, #0]
+ 8000392:	691b      	ldr	r3, [r3, #16]
+ 8000394:	f403 5300 	and.w	r3, r3, #8192	; 0x2000
+ 8000398:	2b00      	cmp	r3, #0
+ 800039a:	d109      	bne.n	80003b0 <main+0x1ec>
+			// arm system
+			armed = 1; // set arm state
+ 800039c:	2301      	movs	r3, #1
+ 800039e:	607b      	str	r3, [r7, #4]
+			GPIOA->ODR |= (1 << ArmStatusPin); // turn on ArmStatus LED
+ 80003a0:	4b1d      	ldr	r3, [pc, #116]	; (8000418 <main+0x254>)
+ 80003a2:	681b      	ldr	r3, [r3, #0]
+ 80003a4:	695a      	ldr	r2, [r3, #20]
+ 80003a6:	4b1c      	ldr	r3, [pc, #112]	; (8000418 <main+0x254>)
+ 80003a8:	681b      	ldr	r3, [r3, #0]
+ 80003aa:	f042 0220 	orr.w	r2, r2, #32
+ 80003ae:	615a      	str	r2, [r3, #20]
+		}
+		// check if DisarmButton is pressed
+		if ((GPIOC->IDR & (1 << DisarmButtonPin)) == (0 << DisarmButtonPin)){
+ 80003b0:	4b18      	ldr	r3, [pc, #96]	; (8000414 <main+0x250>)
+ 80003b2:	681b      	ldr	r3, [r3, #0]
+ 80003b4:	691b      	ldr	r3, [r3, #16]
+ 80003b6:	f403 7380 	and.w	r3, r3, #256	; 0x100
+ 80003ba:	2b00      	cmp	r3, #0
+ 80003bc:	d121      	bne.n	8000402 <main+0x23e>
+			// disarm system
+			armed = 0; // reset arm state
+ 80003be:	2300      	movs	r3, #0
+ 80003c0:	607b      	str	r3, [r7, #4]
+			GPIOA->ODR &= ~(1 << ArmStatusPin); // turn off ArmStatus LED
+ 80003c2:	4b15      	ldr	r3, [pc, #84]	; (8000418 <main+0x254>)
+ 80003c4:	681b      	ldr	r3, [r3, #0]
+ 80003c6:	695a      	ldr	r2, [r3, #20]
+ 80003c8:	4b13      	ldr	r3, [pc, #76]	; (8000418 <main+0x254>)
+ 80003ca:	681b      	ldr	r3, [r3, #0]
+ 80003cc:	f022 0220 	bic.w	r2, r2, #32
+ 80003d0:	615a      	str	r2, [r3, #20]
+			GPIOA->ODR &= ~(1 << FrontAlarmPin); // turn off FrontAlarm LED
+ 80003d2:	4b11      	ldr	r3, [pc, #68]	; (8000418 <main+0x254>)
+ 80003d4:	681b      	ldr	r3, [r3, #0]
+ 80003d6:	695a      	ldr	r2, [r3, #20]
+ 80003d8:	4b0f      	ldr	r3, [pc, #60]	; (8000418 <main+0x254>)
+ 80003da:	681b      	ldr	r3, [r3, #0]
+ 80003dc:	f022 0240 	bic.w	r2, r2, #64	; 0x40
+ 80003e0:	615a      	str	r2, [r3, #20]
+			GPIOA->ODR &= ~(1 << BackAlarmPin); // turn off BackAlarm LED
+ 80003e2:	4b0d      	ldr	r3, [pc, #52]	; (8000418 <main+0x254>)
+ 80003e4:	681b      	ldr	r3, [r3, #0]
+ 80003e6:	695a      	ldr	r2, [r3, #20]
+ 80003e8:	4b0b      	ldr	r3, [pc, #44]	; (8000418 <main+0x254>)
+ 80003ea:	681b      	ldr	r3, [r3, #0]
+ 80003ec:	f022 0280 	bic.w	r2, r2, #128	; 0x80
+ 80003f0:	615a      	str	r2, [r3, #20]
+			GPIOB->ODR &= ~(1 << WindowAlarmPin); // turn off WindowAlarm LED
+ 80003f2:	4b0a      	ldr	r3, [pc, #40]	; (800041c <main+0x258>)
+ 80003f4:	681b      	ldr	r3, [r3, #0]
+ 80003f6:	695a      	ldr	r2, [r3, #20]
+ 80003f8:	4b08      	ldr	r3, [pc, #32]	; (800041c <main+0x258>)
+ 80003fa:	681b      	ldr	r3, [r3, #0]
+ 80003fc:	f022 0240 	bic.w	r2, r2, #64	; 0x40
+ 8000400:	615a      	str	r2, [r3, #20]
+		}
+		/* Part 6. Typed by Marcel Pratikto. */
+		// if system is armed, check sensors
+		if (armed){
+ 8000402:	687b      	ldr	r3, [r7, #4]
+ 8000404:	2b00      	cmp	r3, #0
+ 8000406:	d0c2      	beq.n	800038e <main+0x1ca>
+			// check the FrontSensor
+			if ((GPIOA->IDR & (1 << FrontSensorPin)) == (1 << FrontSensorPin)){
+ 8000408:	4b03      	ldr	r3, [pc, #12]	; (8000418 <main+0x254>)
+ 800040a:	681b      	ldr	r3, [r3, #0]
+ 800040c:	691b      	ldr	r3, [r3, #16]
+ 800040e:	e007      	b.n	8000420 <main+0x25c>
+ 8000410:	20000000 	.word	0x20000000
+ 8000414:	2000000c 	.word	0x2000000c
+ 8000418:	20000004 	.word	0x20000004
+ 800041c:	20000008 	.word	0x20000008
+ 8000420:	f003 0301 	and.w	r3, r3, #1
+ 8000424:	2b00      	cmp	r3, #0
+ 8000426:	d007      	beq.n	8000438 <main+0x274>
+				// system armed & front door is open:
+				GPIOA->ODR |= (1 << FrontAlarmPin); // turn on FrontAlarm LED
+ 8000428:	4b13      	ldr	r3, [pc, #76]	; (8000478 <main+0x2b4>)
+ 800042a:	681b      	ldr	r3, [r3, #0]
+ 800042c:	695a      	ldr	r2, [r3, #20]
+ 800042e:	4b12      	ldr	r3, [pc, #72]	; (8000478 <main+0x2b4>)
+ 8000430:	681b      	ldr	r3, [r3, #0]
+ 8000432:	f042 0240 	orr.w	r2, r2, #64	; 0x40
+ 8000436:	615a      	str	r2, [r3, #20]
+			}
+			// check the BackSensor
+			if ((GPIOA->IDR & (1 << BackSensorPin)) == (1 << BackSensorPin)){
+ 8000438:	4b0f      	ldr	r3, [pc, #60]	; (8000478 <main+0x2b4>)
+ 800043a:	681b      	ldr	r3, [r3, #0]
+ 800043c:	691b      	ldr	r3, [r3, #16]
+ 800043e:	f003 0302 	and.w	r3, r3, #2
+ 8000442:	2b00      	cmp	r3, #0
+ 8000444:	d007      	beq.n	8000456 <main+0x292>
+				// system armed & back door is open:
+				GPIOA->ODR |= (1 << BackAlarmPin); // turn on BackAlarm LED
+ 8000446:	4b0c      	ldr	r3, [pc, #48]	; (8000478 <main+0x2b4>)
+ 8000448:	681b      	ldr	r3, [r3, #0]
+ 800044a:	695a      	ldr	r2, [r3, #20]
+ 800044c:	4b0a      	ldr	r3, [pc, #40]	; (8000478 <main+0x2b4>)
+ 800044e:	681b      	ldr	r3, [r3, #0]
+ 8000450:	f042 0280 	orr.w	r2, r2, #128	; 0x80
+ 8000454:	615a      	str	r2, [r3, #20]
+			}
+			// check the WindowSensor
+			if ((GPIOA->IDR & (1 << WindowSensorPin)) == (1 << WindowSensorPin)){
+ 8000456:	4b08      	ldr	r3, [pc, #32]	; (8000478 <main+0x2b4>)
+ 8000458:	681b      	ldr	r3, [r3, #0]
+ 800045a:	691b      	ldr	r3, [r3, #16]
+ 800045c:	f003 0310 	and.w	r3, r3, #16
+ 8000460:	2b00      	cmp	r3, #0
+ 8000462:	d094      	beq.n	800038e <main+0x1ca>
+				// system armed & window is open:
+				GPIOB->ODR |= (1 << WindowAlarmPin); // turn on WindowAlarm LED
+ 8000464:	4b05      	ldr	r3, [pc, #20]	; (800047c <main+0x2b8>)
+ 8000466:	681b      	ldr	r3, [r3, #0]
+ 8000468:	695a      	ldr	r2, [r3, #20]
+ 800046a:	4b04      	ldr	r3, [pc, #16]	; (800047c <main+0x2b8>)
+ 800046c:	681b      	ldr	r3, [r3, #0]
+ 800046e:	f042 0240 	orr.w	r2, r2, #64	; 0x40
+ 8000472:	615a      	str	r2, [r3, #20]
+		if ((GPIOC->IDR & (1 << ArmButtonPin)) == (0 << ArmButtonPin)){
+ 8000474:	e78b      	b.n	800038e <main+0x1ca>
+ 8000476:	bf00      	nop
+ 8000478:	20000004 	.word	0x20000004
+ 800047c:	20000008 	.word	0x20000008
+
+08000480 <Reset_Handler>:
+
+  .section .text.Reset_Handler
+  .weak Reset_Handler
+  .type Reset_Handler, %function
+Reset_Handler:
+  ldr   r0, =_estack
+ 8000480:	480d      	ldr	r0, [pc, #52]	; (80004b8 <LoopForever+0x2>)
+  mov   sp, r0          /* set stack pointer */
+ 8000482:	4685      	mov	sp, r0
+/* Call the clock system initialization function.*/
+  bl  SystemInit
+ 8000484:	f3af 8000 	nop.w
+
+/* Copy the data segment initializers from flash to SRAM */
+  ldr r0, =_sdata
+ 8000488:	480c      	ldr	r0, [pc, #48]	; (80004bc <LoopForever+0x6>)
+  ldr r1, =_edata
+ 800048a:	490d      	ldr	r1, [pc, #52]	; (80004c0 <LoopForever+0xa>)
+  ldr r2, =_sidata
+ 800048c:	4a0d      	ldr	r2, [pc, #52]	; (80004c4 <LoopForever+0xe>)
+  movs r3, #0
+ 800048e:	2300      	movs	r3, #0
+  b LoopCopyDataInit
+ 8000490:	e002      	b.n	8000498 <LoopCopyDataInit>
+
+08000492 <CopyDataInit>:
+
+CopyDataInit:
+  ldr r4, [r2, r3]
+ 8000492:	58d4      	ldr	r4, [r2, r3]
+  str r4, [r0, r3]
+ 8000494:	50c4      	str	r4, [r0, r3]
+  adds r3, r3, #4
+ 8000496:	3304      	adds	r3, #4
+
+08000498 <LoopCopyDataInit>:
+
+LoopCopyDataInit:
+  adds r4, r0, r3
+ 8000498:	18c4      	adds	r4, r0, r3
+  cmp r4, r1
+ 800049a:	428c      	cmp	r4, r1
+  bcc CopyDataInit
+ 800049c:	d3f9      	bcc.n	8000492 <CopyDataInit>
+
+/* Zero fill the bss segment. */
+  ldr r2, =_sbss
+ 800049e:	4a0a      	ldr	r2, [pc, #40]	; (80004c8 <LoopForever+0x12>)
+  ldr r4, =_ebss
+ 80004a0:	4c0a      	ldr	r4, [pc, #40]	; (80004cc <LoopForever+0x16>)
+  movs r3, #0
+ 80004a2:	2300      	movs	r3, #0
+  b LoopFillZerobss
+ 80004a4:	e001      	b.n	80004aa <LoopFillZerobss>
+
+080004a6 <FillZerobss>:
+
+FillZerobss:
+  str  r3, [r2]
+ 80004a6:	6013      	str	r3, [r2, #0]
+  adds r2, r2, #4
+ 80004a8:	3204      	adds	r2, #4
+
+080004aa <LoopFillZerobss>:
+
+LoopFillZerobss:
+  cmp r2, r4
+ 80004aa:	42a2      	cmp	r2, r4
+  bcc FillZerobss
+ 80004ac:	d3fb      	bcc.n	80004a6 <FillZerobss>
+
+/* Call static constructors */
+  bl __libc_init_array
+ 80004ae:	f000 f811 	bl	80004d4 <__libc_init_array>
+/* Call the application's entry point.*/
+  bl main
+ 80004b2:	f7ff fe87 	bl	80001c4 <main>
+
+080004b6 <LoopForever>:
+
+LoopForever:
+  b LoopForever
+ 80004b6:	e7fe      	b.n	80004b6 <LoopForever>
+  ldr   r0, =_estack
+ 80004b8:	20018000 	.word	0x20018000
+  ldr r0, =_sdata
+ 80004bc:	20000000 	.word	0x20000000
+  ldr r1, =_edata
+ 80004c0:	20000010 	.word	0x20000010
+  ldr r2, =_sidata
+ 80004c4:	0800053c 	.word	0x0800053c
+  ldr r2, =_sbss
+ 80004c8:	20000010 	.word	0x20000010
+  ldr r4, =_ebss
+ 80004cc:	2000002c 	.word	0x2000002c
+
+080004d0 <ADC1_2_IRQHandler>:
+ * @retval : None
+*/
+  .section .text.Default_Handler,"ax",%progbits
+Default_Handler:
+Infinite_Loop:
+  b Infinite_Loop
+ 80004d0:	e7fe      	b.n	80004d0 <ADC1_2_IRQHandler>
+	...
+
+080004d4 <__libc_init_array>:
+ 80004d4:	b570      	push	{r4, r5, r6, lr}
+ 80004d6:	4d0d      	ldr	r5, [pc, #52]	; (800050c <__libc_init_array+0x38>)
+ 80004d8:	4c0d      	ldr	r4, [pc, #52]	; (8000510 <__libc_init_array+0x3c>)
+ 80004da:	1b64      	subs	r4, r4, r5
+ 80004dc:	10a4      	asrs	r4, r4, #2
+ 80004de:	2600      	movs	r6, #0
+ 80004e0:	42a6      	cmp	r6, r4
+ 80004e2:	d109      	bne.n	80004f8 <__libc_init_array+0x24>
+ 80004e4:	4d0b      	ldr	r5, [pc, #44]	; (8000514 <__libc_init_array+0x40>)
+ 80004e6:	4c0c      	ldr	r4, [pc, #48]	; (8000518 <__libc_init_array+0x44>)
+ 80004e8:	f000 f818 	bl	800051c <_init>
+ 80004ec:	1b64      	subs	r4, r4, r5
+ 80004ee:	10a4      	asrs	r4, r4, #2
+ 80004f0:	2600      	movs	r6, #0
+ 80004f2:	42a6      	cmp	r6, r4
+ 80004f4:	d105      	bne.n	8000502 <__libc_init_array+0x2e>
+ 80004f6:	bd70      	pop	{r4, r5, r6, pc}
+ 80004f8:	f855 3b04 	ldr.w	r3, [r5], #4
+ 80004fc:	4798      	blx	r3
+ 80004fe:	3601      	adds	r6, #1
+ 8000500:	e7ee      	b.n	80004e0 <__libc_init_array+0xc>
+ 8000502:	f855 3b04 	ldr.w	r3, [r5], #4
+ 8000506:	4798      	blx	r3
+ 8000508:	3601      	adds	r6, #1
+ 800050a:	e7f2      	b.n	80004f2 <__libc_init_array+0x1e>
+ 800050c:	08000534 	.word	0x08000534
+ 8000510:	08000534 	.word	0x08000534
+ 8000514:	08000534 	.word	0x08000534
+ 8000518:	08000538 	.word	0x08000538
+
+0800051c <_init>:
+ 800051c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 800051e:	bf00      	nop
+ 8000520:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 8000522:	bc08      	pop	{r3}
+ 8000524:	469e      	mov	lr, r3
+ 8000526:	4770      	bx	lr
+
+08000528 <_fini>:
+ 8000528:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 800052a:	bf00      	nop
+ 800052c:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 800052e:	bc08      	pop	{r3}
+ 8000530:	469e      	mov	lr, r3
+ 8000532:	4770      	bx	lr

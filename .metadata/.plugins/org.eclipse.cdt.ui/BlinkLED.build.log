@@ -1,0 +1,9 @@
+13:41:53 **** Clean-only build of configuration Debug for project BlinkLED ****
+make -j20 clean 
+rm -rf ./Startup/startup_stm32l476rgtx.d ./Startup/startup_stm32l476rgtx.o
+rm -rf ./Src/main.d ./Src/main.o ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
+rm -rf BlinkLED.elf BlinkLED.list BlinkLED.map default.size.stdout
+ 
+
+13:41:53 Build Finished. 0 errors, 0 warnings. (took 237ms)
+

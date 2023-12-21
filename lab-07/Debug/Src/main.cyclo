@@ -1,0 +1,16 @@
+../Inc/drivers.h:37:6:GPIOA_enable_clock	1
+../Inc/drivers.h:38:6:GPIOB_enable_clock	1
+../Inc/drivers.h:39:6:GPIOC_enable_clock	1
+../Inc/drivers.h:44:6:GPIO_configure_input_mode	1
+../Inc/drivers.h:56:6:GPIO_configure_output_mode	1
+../Inc/drivers.h:70:6:GPIO_enable_pull_up_resistor	1
+../Inc/drivers.h:84:6:GPIO_enable_pull_down_resistor	1
+../Inc/drivers.h:98:6:GPIO_disable_pull_resistor	1
+../Inc/drivers.h:115:14:GPIO_read_pin	1
+../Inc/drivers.h:123:6:GPIO_write_pin	2
+../Inc/drivers.h:206:6:SysConfig_enable_clock	1
+../Inc/drivers.h:213:6:GPIO_toggle_pin	1
+../Src/main.c:46:5:main	1
+../Src/main.c:99:6:EXTI15_10_IRQHandler	3
+../Src/main.c:127:6:EXTI0_IRQHandler	25
+../Src/main.c:287:15:keypad_decode	21

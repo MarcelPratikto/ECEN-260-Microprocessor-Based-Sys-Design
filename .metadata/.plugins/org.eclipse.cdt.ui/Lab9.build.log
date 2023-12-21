@@ -1,0 +1,17 @@
+13:24:08 **** Incremental Build of configuration Debug for project Lab9 ****
+make -j20 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "Lab9.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\GitHub\ECEN 260 Microprocessor Based-Sys Design\Lab9\STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Lab9.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Lab9.elf
+ 
+arm-none-eabi-size   Lab9.elf 
+arm-none-eabi-objdump -h -S  Lab9.elf  > "Lab9.list"
+   text	   data	    bss	    dec	    hex	filename
+  14072	     20	   1940	  16032	   3ea0	Lab9.elf
+Finished building: default.size.stdout
+ 
+Finished building: Lab9.list
+ 
+
+13:24:09 Build Finished. 0 errors, 0 warnings. (took 619ms)
+

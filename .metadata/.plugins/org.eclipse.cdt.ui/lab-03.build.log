@@ -1,0 +1,9 @@
+13:41:53 **** Clean-only build of configuration Debug for project lab-03 ****
+make -j20 clean 
+rm -rf ./Startup/startup_stm32l476rgtx.d ./Startup/startup_stm32l476rgtx.o
+rm -rf ./Src/main.d ./Src/main.o ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
+rm -rf default.size.stdout lab-03.elf lab-03.list lab-03.map
+ 
+
+13:41:53 Build Finished. 0 errors, 0 warnings. (took 86ms)
+

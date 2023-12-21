@@ -1,0 +1,10 @@
+13:42:31 **** Incremental Build of configuration Debug for project Lab10_PartA ****
+make -j20 all 
+arm-none-eabi-size   Lab10_PartA.elf 
+   text	   data	    bss	    dec	    hex	filename
+   8948	     20	   1668	  10636	   298c	Lab10_PartA.elf
+Finished building: default.size.stdout
+ 
+
+13:42:31 Build Finished. 0 errors, 0 warnings. (took 152ms)
+

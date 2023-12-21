@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;Lab10_PartA/Core/Src/font_table&apos; to &apos;font_table.c&apos;" description="Rename resource &apos;font_table&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Core/Src/font_table" name="font_table.c" stamp="1700117790327" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;Lab10_PartA/Core/Src/font_table.c&apos; to &apos;font_table.txt&apos;" description="Rename resource &apos;font_table.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Core/Src/font_table.c" name="font_table.txt" stamp="1700117825029" updateReferences="true"/>
+</session>

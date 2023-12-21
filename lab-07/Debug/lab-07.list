@@ -1,0 +1,1565 @@
+
+lab-07.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   00000184  08000000  08000000  00010000  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  1 .text         00000998  08000184  08000184  00010184  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       00000000  08000b1c  08000b1c  00020020  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  3 .ARM.extab    00000000  08000b1c  08000b1c  00020020  2**0
+                  CONTENTS
+  4 .ARM          00000000  08000b1c  08000b1c  00020020  2**0
+                  CONTENTS
+  5 .preinit_array 00000000  08000b1c  08000b1c  00020020  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000004  08000b1c  08000b1c  00010b1c  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  7 .fini_array   00000004  08000b20  08000b20  00010b20  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  8 .data         00000020  20000000  08000b24  00020000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .sram2        00000000  10000000  10000000  00020020  2**0
+                  CONTENTS
+ 10 .bss          0000007c  20000020  20000020  00020020  2**2
+                  ALLOC
+ 11 ._user_heap_stack 00000604  2000009c  2000009c  00020020  2**0
+                  ALLOC
+ 12 .ARM.attributes 00000030  00000000  00000000  00020020  2**0
+                  CONTENTS, READONLY
+ 13 .comment      00000043  00000000  00000000  00020050  2**0
+                  CONTENTS, READONLY
+ 14 .debug_info   00000743  00000000  00000000  00020093  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 15 .debug_abbrev 0000024a  00000000  00000000  000207d6  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 16 .debug_aranges 000000c0  00000000  00000000  00020a20  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 17 .debug_rnglists 0000008a  00000000  00000000  00020ae0  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 18 .debug_macro  00000b93  00000000  00000000  00020b6a  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 19 .debug_line   00000631  00000000  00000000  000216fd  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 20 .debug_str    00003287  00000000  00000000  00021d2e  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 21 .debug_frame  00000284  00000000  00000000  00024fb8  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 22 .debug_line_str 00000063  00000000  00000000  0002523c  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+
+Disassembly of section .text:
+
+08000184 <__do_global_dtors_aux>:
+ 8000184:	b510      	push	{r4, lr}
+ 8000186:	4c05      	ldr	r4, [pc, #20]	; (800019c <__do_global_dtors_aux+0x18>)
+ 8000188:	7823      	ldrb	r3, [r4, #0]
+ 800018a:	b933      	cbnz	r3, 800019a <__do_global_dtors_aux+0x16>
+ 800018c:	4b04      	ldr	r3, [pc, #16]	; (80001a0 <__do_global_dtors_aux+0x1c>)
+ 800018e:	b113      	cbz	r3, 8000196 <__do_global_dtors_aux+0x12>
+ 8000190:	4804      	ldr	r0, [pc, #16]	; (80001a4 <__do_global_dtors_aux+0x20>)
+ 8000192:	f3af 8000 	nop.w
+ 8000196:	2301      	movs	r3, #1
+ 8000198:	7023      	strb	r3, [r4, #0]
+ 800019a:	bd10      	pop	{r4, pc}
+ 800019c:	20000020 	.word	0x20000020
+ 80001a0:	00000000 	.word	0x00000000
+ 80001a4:	08000b04 	.word	0x08000b04
+
+080001a8 <frame_dummy>:
+ 80001a8:	b508      	push	{r3, lr}
+ 80001aa:	4b03      	ldr	r3, [pc, #12]	; (80001b8 <frame_dummy+0x10>)
+ 80001ac:	b11b      	cbz	r3, 80001b6 <frame_dummy+0xe>
+ 80001ae:	4903      	ldr	r1, [pc, #12]	; (80001bc <frame_dummy+0x14>)
+ 80001b0:	4803      	ldr	r0, [pc, #12]	; (80001c0 <frame_dummy+0x18>)
+ 80001b2:	f3af 8000 	nop.w
+ 80001b6:	bd08      	pop	{r3, pc}
+ 80001b8:	00000000 	.word	0x00000000
+ 80001bc:	20000024 	.word	0x20000024
+ 80001c0:	08000b04 	.word	0x08000b04
+
+080001c4 <GPIOA_enable_clock>:
+Port* GPIOA = (Port*) 0x48000000; // base address of GPIOA
+Port* GPIOB = (Port*) 0x48000400; // base address of GPIOB
+Port* GPIOC = (Port*) 0x48000800; // base address of GPIOC
+
+// enable clock for each ports
+void GPIOA_enable_clock(){*AHB2ENR |= bit(0);}
+ 80001c4:	b480      	push	{r7}
+ 80001c6:	af00      	add	r7, sp, #0
+ 80001c8:	4b06      	ldr	r3, [pc, #24]	; (80001e4 <GPIOA_enable_clock+0x20>)
+ 80001ca:	681b      	ldr	r3, [r3, #0]
+ 80001cc:	681a      	ldr	r2, [r3, #0]
+ 80001ce:	4b05      	ldr	r3, [pc, #20]	; (80001e4 <GPIOA_enable_clock+0x20>)
+ 80001d0:	681b      	ldr	r3, [r3, #0]
+ 80001d2:	f042 0201 	orr.w	r2, r2, #1
+ 80001d6:	601a      	str	r2, [r3, #0]
+ 80001d8:	bf00      	nop
+ 80001da:	46bd      	mov	sp, r7
+ 80001dc:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80001e0:	4770      	bx	lr
+ 80001e2:	bf00      	nop
+ 80001e4:	20000000 	.word	0x20000000
+
+080001e8 <GPIOB_enable_clock>:
+void GPIOB_enable_clock(){*AHB2ENR |= bit(1);}
+ 80001e8:	b480      	push	{r7}
+ 80001ea:	af00      	add	r7, sp, #0
+ 80001ec:	4b06      	ldr	r3, [pc, #24]	; (8000208 <GPIOB_enable_clock+0x20>)
+ 80001ee:	681b      	ldr	r3, [r3, #0]
+ 80001f0:	681a      	ldr	r2, [r3, #0]
+ 80001f2:	4b05      	ldr	r3, [pc, #20]	; (8000208 <GPIOB_enable_clock+0x20>)
+ 80001f4:	681b      	ldr	r3, [r3, #0]
+ 80001f6:	f042 0202 	orr.w	r2, r2, #2
+ 80001fa:	601a      	str	r2, [r3, #0]
+ 80001fc:	bf00      	nop
+ 80001fe:	46bd      	mov	sp, r7
+ 8000200:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000204:	4770      	bx	lr
+ 8000206:	bf00      	nop
+ 8000208:	20000000 	.word	0x20000000
+
+0800020c <GPIOC_enable_clock>:
+void GPIOC_enable_clock(){*AHB2ENR |= bit(2);}
+ 800020c:	b480      	push	{r7}
+ 800020e:	af00      	add	r7, sp, #0
+ 8000210:	4b06      	ldr	r3, [pc, #24]	; (800022c <GPIOC_enable_clock+0x20>)
+ 8000212:	681b      	ldr	r3, [r3, #0]
+ 8000214:	681a      	ldr	r2, [r3, #0]
+ 8000216:	4b05      	ldr	r3, [pc, #20]	; (800022c <GPIOC_enable_clock+0x20>)
+ 8000218:	681b      	ldr	r3, [r3, #0]
+ 800021a:	f042 0204 	orr.w	r2, r2, #4
+ 800021e:	601a      	str	r2, [r3, #0]
+ 8000220:	bf00      	nop
+ 8000222:	46bd      	mov	sp, r7
+ 8000224:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000228:	4770      	bx	lr
+ 800022a:	bf00      	nop
+ 800022c:	20000000 	.word	0x20000000
+
+08000230 <GPIO_configure_input_mode>:
+
+//void SysConfig_enable_clock(){} //TODO
+
+// This function configures a pin in the port specified by GPIOx as an input device
+void GPIO_configure_input_mode(Port* GPIOx, unsigned int pin)
+{
+ 8000230:	b480      	push	{r7}
+ 8000232:	b085      	sub	sp, #20
+ 8000234:	af00      	add	r7, sp, #0
+ 8000236:	6078      	str	r0, [r7, #4]
+ 8000238:	6039      	str	r1, [r7, #0]
+	// MODER input: 0b00
+	// takes the MODER (Mode register)
+	unsigned int mode = GPIOx->MODER;
+ 800023a:	687b      	ldr	r3, [r7, #4]
+ 800023c:	681b      	ldr	r3, [r3, #0]
+ 800023e:	60fb      	str	r3, [r7, #12]
+	// reset the pin to 0b00
+	mode &= ~bitpair(pin);
+ 8000240:	683b      	ldr	r3, [r7, #0]
+ 8000242:	005b      	lsls	r3, r3, #1
+ 8000244:	2203      	movs	r2, #3
+ 8000246:	fa02 f303 	lsl.w	r3, r2, r3
+ 800024a:	43db      	mvns	r3, r3
+ 800024c:	461a      	mov	r2, r3
+ 800024e:	68fb      	ldr	r3, [r7, #12]
+ 8000250:	4013      	ands	r3, r2
+ 8000252:	60fb      	str	r3, [r7, #12]
+	// store
+	GPIOx->MODER = mode;
+ 8000254:	687b      	ldr	r3, [r7, #4]
+ 8000256:	68fa      	ldr	r2, [r7, #12]
+ 8000258:	601a      	str	r2, [r3, #0]
+}
+ 800025a:	bf00      	nop
+ 800025c:	3714      	adds	r7, #20
+ 800025e:	46bd      	mov	sp, r7
+ 8000260:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000264:	4770      	bx	lr
+
+08000266 <GPIO_configure_output_mode>:
+
+// This function configures a pin in the port specified by GPIOx as an output device
+void GPIO_configure_output_mode(Port* GPIOx, unsigned int pin)
+{
+ 8000266:	b480      	push	{r7}
+ 8000268:	b085      	sub	sp, #20
+ 800026a:	af00      	add	r7, sp, #0
+ 800026c:	6078      	str	r0, [r7, #4]
+ 800026e:	6039      	str	r1, [r7, #0]
+	// MODER output: 0b01
+	// takes the MODER (Mode Register)
+	unsigned int mode = GPIOx->MODER;
+ 8000270:	687b      	ldr	r3, [r7, #4]
+ 8000272:	681b      	ldr	r3, [r3, #0]
+ 8000274:	60fb      	str	r3, [r7, #12]
+	// reset the pin to 0b00
+	mode &= ~bitpair(pin);
+ 8000276:	683b      	ldr	r3, [r7, #0]
+ 8000278:	005b      	lsls	r3, r3, #1
+ 800027a:	2203      	movs	r2, #3
+ 800027c:	fa02 f303 	lsl.w	r3, r2, r3
+ 8000280:	43db      	mvns	r3, r3
+ 8000282:	461a      	mov	r2, r3
+ 8000284:	68fb      	ldr	r3, [r7, #12]
+ 8000286:	4013      	ands	r3, r2
+ 8000288:	60fb      	str	r3, [r7, #12]
+	// set to 0b01
+	mode |= lbit(pin);
+ 800028a:	683b      	ldr	r3, [r7, #0]
+ 800028c:	005b      	lsls	r3, r3, #1
+ 800028e:	2201      	movs	r2, #1
+ 8000290:	fa02 f303 	lsl.w	r3, r2, r3
+ 8000294:	461a      	mov	r2, r3
+ 8000296:	68fb      	ldr	r3, [r7, #12]
+ 8000298:	4313      	orrs	r3, r2
+ 800029a:	60fb      	str	r3, [r7, #12]
+	// store
+	GPIOx->MODER = mode;
+ 800029c:	687b      	ldr	r3, [r7, #4]
+ 800029e:	68fa      	ldr	r2, [r7, #12]
+ 80002a0:	601a      	str	r2, [r3, #0]
+}
+ 80002a2:	bf00      	nop
+ 80002a4:	3714      	adds	r7, #20
+ 80002a6:	46bd      	mov	sp, r7
+ 80002a8:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80002ac:	4770      	bx	lr
+
+080002ae <GPIO_read_pin>:
+ * return: int
+ * 0 if not read
+ * 1 if read
+ */
+unsigned int GPIO_read_pin(Port* GPIOx, unsigned int pin)
+{
+ 80002ae:	b480      	push	{r7}
+ 80002b0:	b085      	sub	sp, #20
+ 80002b2:	af00      	add	r7, sp, #0
+ 80002b4:	6078      	str	r0, [r7, #4]
+ 80002b6:	6039      	str	r1, [r7, #0]
+	// reads the value of the pin in the IDR (Input Data Register)
+	unsigned int read = GPIOx->IDR & bit(pin);
+ 80002b8:	687b      	ldr	r3, [r7, #4]
+ 80002ba:	691b      	ldr	r3, [r3, #16]
+ 80002bc:	2101      	movs	r1, #1
+ 80002be:	683a      	ldr	r2, [r7, #0]
+ 80002c0:	fa01 f202 	lsl.w	r2, r1, r2
+ 80002c4:	4013      	ands	r3, r2
+ 80002c6:	60fb      	str	r3, [r7, #12]
+	return read;
+ 80002c8:	68fb      	ldr	r3, [r7, #12]
+}
+ 80002ca:	4618      	mov	r0, r3
+ 80002cc:	3714      	adds	r7, #20
+ 80002ce:	46bd      	mov	sp, r7
+ 80002d0:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80002d4:	4770      	bx	lr
+
+080002d6 <GPIO_write_pin>:
+
+// this function writes a state to a pin in a port specified by GPIOx
+void GPIO_write_pin(Port* GPIOx, unsigned int pin, unsigned int state)
+{
+ 80002d6:	b480      	push	{r7}
+ 80002d8:	b087      	sub	sp, #28
+ 80002da:	af00      	add	r7, sp, #0
+ 80002dc:	60f8      	str	r0, [r7, #12]
+ 80002de:	60b9      	str	r1, [r7, #8]
+ 80002e0:	607a      	str	r2, [r7, #4]
+	// takes the value from the ODR (Output Data Register)
+	unsigned int write = GPIOx->ODR;
+ 80002e2:	68fb      	ldr	r3, [r7, #12]
+ 80002e4:	695b      	ldr	r3, [r3, #20]
+ 80002e6:	617b      	str	r3, [r7, #20]
+	// if state is off or 0b0
+	if (!state)
+ 80002e8:	687b      	ldr	r3, [r7, #4]
+ 80002ea:	2b00      	cmp	r3, #0
+ 80002ec:	d10c      	bne.n	8000308 <GPIO_write_pin+0x32>
+	{
+		// reset pin to 0b0
+		write &= ~bit(pin);
+ 80002ee:	2201      	movs	r2, #1
+ 80002f0:	68bb      	ldr	r3, [r7, #8]
+ 80002f2:	fa02 f303 	lsl.w	r3, r2, r3
+ 80002f6:	43db      	mvns	r3, r3
+ 80002f8:	461a      	mov	r2, r3
+ 80002fa:	697b      	ldr	r3, [r7, #20]
+ 80002fc:	4013      	ands	r3, r2
+ 80002fe:	617b      	str	r3, [r7, #20]
+		GPIOx->ODR = write;
+ 8000300:	68fb      	ldr	r3, [r7, #12]
+ 8000302:	697a      	ldr	r2, [r7, #20]
+ 8000304:	615a      	str	r2, [r3, #20]
+	{
+		// set pin to 0b1
+		write |= bit(pin);
+		GPIOx->ODR = write;
+	}
+}
+ 8000306:	e00a      	b.n	800031e <GPIO_write_pin+0x48>
+		write |= bit(pin);
+ 8000308:	2201      	movs	r2, #1
+ 800030a:	68bb      	ldr	r3, [r7, #8]
+ 800030c:	fa02 f303 	lsl.w	r3, r2, r3
+ 8000310:	461a      	mov	r2, r3
+ 8000312:	697b      	ldr	r3, [r7, #20]
+ 8000314:	4313      	orrs	r3, r2
+ 8000316:	617b      	str	r3, [r7, #20]
+		GPIOx->ODR = write;
+ 8000318:	68fb      	ldr	r3, [r7, #12]
+ 800031a:	697a      	ldr	r2, [r7, #20]
+ 800031c:	615a      	str	r2, [r3, #20]
+}
+ 800031e:	bf00      	nop
+ 8000320:	371c      	adds	r7, #28
+ 8000322:	46bd      	mov	sp, r7
+ 8000324:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000328:	4770      	bx	lr
+	...
+
+0800032c <SysConfig_enable_clock>:
+
+// Advanced Peripheral Bus 2 Enable Register
+unsigned int* RCC_APB2ENR = (unsigned int*) 0x40021060;
+
+// enables the System Configuration clock (for external interrupts)
+void SysConfig_enable_clock(void){
+ 800032c:	b480      	push	{r7}
+ 800032e:	af00      	add	r7, sp, #0
+
+	// set bit 0 for the System Configuration Clock
+	*RCC_APB2ENR |= 0b1;
+ 8000330:	4b06      	ldr	r3, [pc, #24]	; (800034c <SysConfig_enable_clock+0x20>)
+ 8000332:	681b      	ldr	r3, [r3, #0]
+ 8000334:	681a      	ldr	r2, [r3, #0]
+ 8000336:	4b05      	ldr	r3, [pc, #20]	; (800034c <SysConfig_enable_clock+0x20>)
+ 8000338:	681b      	ldr	r3, [r3, #0]
+ 800033a:	f042 0201 	orr.w	r2, r2, #1
+ 800033e:	601a      	str	r2, [r3, #0]
+}
+ 8000340:	bf00      	nop
+ 8000342:	46bd      	mov	sp, r7
+ 8000344:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000348:	4770      	bx	lr
+ 800034a:	bf00      	nop
+ 800034c:	2000001c 	.word	0x2000001c
+
+08000350 <main>:
+int current_password[10], temporary_password[10];
+bool saving_password = false, entering_password = false, locked = false, alarm = false;
+
+
+// ??? add a comment here describing the overall program
+int main(void){
+ 8000350:	b580      	push	{r7, lr}
+ 8000352:	b082      	sub	sp, #8
+ 8000354:	af00      	add	r7, sp, #0
+
+  unsigned int temp;
+
+  // ??? add a comment here
+  GPIOA_enable_clock();
+ 8000356:	f7ff ff35 	bl	80001c4 <GPIOA_enable_clock>
+  GPIOB_enable_clock();
+ 800035a:	f7ff ff45 	bl	80001e8 <GPIOB_enable_clock>
+  GPIOC_enable_clock();
+ 800035e:	f7ff ff55 	bl	800020c <GPIOC_enable_clock>
+
+  // Turn on system clock for interrupts
+  SysConfig_enable_clock(); // see the file in I-Learn with code to add to your drivers.h file
+ 8000362:	f7ff ffe3 	bl	800032c <SysConfig_enable_clock>
+
+  // Configure outputs
+  GPIO_configure_output_mode(L2_Port, L2_Pin); // LED2 is output
+ 8000366:	4b43      	ldr	r3, [pc, #268]	; (8000474 <main+0x124>)
+ 8000368:	681b      	ldr	r3, [r3, #0]
+ 800036a:	2105      	movs	r1, #5
+ 800036c:	4618      	mov	r0, r3
+ 800036e:	f7ff ff7a 	bl	8000266 <GPIO_configure_output_mode>
+  GPIO_configure_output_mode(LR_Port, LR_Pin); // Red LED is output
+ 8000372:	4b40      	ldr	r3, [pc, #256]	; (8000474 <main+0x124>)
+ 8000374:	681b      	ldr	r3, [r3, #0]
+ 8000376:	2107      	movs	r1, #7
+ 8000378:	4618      	mov	r0, r3
+ 800037a:	f7ff ff74 	bl	8000266 <GPIO_configure_output_mode>
+  GPIO_configure_output_mode(LG_Port, LG_Pin); // Green LED is output
+ 800037e:	4b3d      	ldr	r3, [pc, #244]	; (8000474 <main+0x124>)
+ 8000380:	681b      	ldr	r3, [r3, #0]
+ 8000382:	2108      	movs	r1, #8
+ 8000384:	4618      	mov	r0, r3
+ 8000386:	f7ff ff6e 	bl	8000266 <GPIO_configure_output_mode>
+  GPIO_configure_output_mode(LB_Port, LB_Pin); // Blue LED is output
+ 800038a:	4b3a      	ldr	r3, [pc, #232]	; (8000474 <main+0x124>)
+ 800038c:	681b      	ldr	r3, [r3, #0]
+ 800038e:	2109      	movs	r1, #9
+ 8000390:	4618      	mov	r0, r3
+ 8000392:	f7ff ff68 	bl	8000266 <GPIO_configure_output_mode>
+
+  // Configure inputs
+  GPIO_configure_input_mode(B1_Port, B1_Pin);  // Button 1 is input
+ 8000396:	4b38      	ldr	r3, [pc, #224]	; (8000478 <main+0x128>)
+ 8000398:	681b      	ldr	r3, [r3, #0]
+ 800039a:	210d      	movs	r1, #13
+ 800039c:	4618      	mov	r0, r3
+ 800039e:	f7ff ff47 	bl	8000230 <GPIO_configure_input_mode>
+  GPIO_configure_input_mode(D0_Port, D0_Pin);  // Data 0 pin is input
+ 80003a2:	4b34      	ldr	r3, [pc, #208]	; (8000474 <main+0x124>)
+ 80003a4:	681b      	ldr	r3, [r3, #0]
+ 80003a6:	2100      	movs	r1, #0
+ 80003a8:	4618      	mov	r0, r3
+ 80003aa:	f7ff ff41 	bl	8000230 <GPIO_configure_input_mode>
+  GPIO_configure_input_mode(D1_Port, D1_Pin);  // Data 1 pin is input
+ 80003ae:	4b31      	ldr	r3, [pc, #196]	; (8000474 <main+0x124>)
+ 80003b0:	681b      	ldr	r3, [r3, #0]
+ 80003b2:	2101      	movs	r1, #1
+ 80003b4:	4618      	mov	r0, r3
+ 80003b6:	f7ff ff3b 	bl	8000230 <GPIO_configure_input_mode>
+  GPIO_configure_input_mode(D2_Port, D2_Pin);  // Data 2 pin is input
+ 80003ba:	4b2e      	ldr	r3, [pc, #184]	; (8000474 <main+0x124>)
+ 80003bc:	681b      	ldr	r3, [r3, #0]
+ 80003be:	2104      	movs	r1, #4
+ 80003c0:	4618      	mov	r0, r3
+ 80003c2:	f7ff ff35 	bl	8000230 <GPIO_configure_input_mode>
+  GPIO_configure_input_mode(D3_Port, D3_Pin);  // Data 3 pin is input
+ 80003c6:	4b2d      	ldr	r3, [pc, #180]	; (800047c <main+0x12c>)
+ 80003c8:	681b      	ldr	r3, [r3, #0]
+ 80003ca:	2100      	movs	r1, #0
+ 80003cc:	4618      	mov	r0, r3
+ 80003ce:	f7ff ff2f 	bl	8000230 <GPIO_configure_input_mode>
+  GPIO_configure_input_mode(DA_Port, DA_Pin);  // Data Available pin is input
+ 80003d2:	4b29      	ldr	r3, [pc, #164]	; (8000478 <main+0x128>)
+ 80003d4:	681b      	ldr	r3, [r3, #0]
+ 80003d6:	2100      	movs	r1, #0
+ 80003d8:	4618      	mov	r0, r3
+ 80003da:	f7ff ff29 	bl	8000230 <GPIO_configure_input_mode>
+
+  // Attach External Interrupt Line 13 to Port C for PC13 (Button 1)
+  temp = SYSCFG->EXTICR[3];   // For line 13, get EXTICR[3] (4+4+4+1) - 16-bit register: 4 x 4-bit groups in each EXTICR[i]
+ 80003de:	4b28      	ldr	r3, [pc, #160]	; (8000480 <main+0x130>)
+ 80003e0:	681b      	ldr	r3, [r3, #0]
+ 80003e2:	695b      	ldr	r3, [r3, #20]
+ 80003e4:	607b      	str	r3, [r7, #4]
+  temp &= ~(0b1111 << 4); // reset the 4 bits for position 1 (groups of 4)
+ 80003e6:	687b      	ldr	r3, [r7, #4]
+ 80003e8:	f023 03f0 	bic.w	r3, r3, #240	; 0xf0
+ 80003ec:	607b      	str	r3, [r7, #4]
+  temp |=  (0b0010 << 4);  // set the 4 bits to 0x2 for GPIOC (GPIOA:0, GPIOB:1, GPIOC:2, ...)
+ 80003ee:	687b      	ldr	r3, [r7, #4]
+ 80003f0:	f043 0320 	orr.w	r3, r3, #32
+ 80003f4:	607b      	str	r3, [r7, #4]
+  SYSCFG->EXTICR[3] = temp;   // put back into EXTICR[3]
+ 80003f6:	4b22      	ldr	r3, [pc, #136]	; (8000480 <main+0x130>)
+ 80003f8:	681b      	ldr	r3, [r3, #0]
+ 80003fa:	687a      	ldr	r2, [r7, #4]
+ 80003fc:	615a      	str	r2, [r3, #20]
+
+  // Enable Interrupts for Line 13 (See 14.3.4)
+  EXTI->IMR1  |= bit(B1_Pin); // Remove mask for Line 13 (See 14.5.1)
+ 80003fe:	4b21      	ldr	r3, [pc, #132]	; (8000484 <main+0x134>)
+ 8000400:	681b      	ldr	r3, [r3, #0]
+ 8000402:	681a      	ldr	r2, [r3, #0]
+ 8000404:	4b1f      	ldr	r3, [pc, #124]	; (8000484 <main+0x134>)
+ 8000406:	681b      	ldr	r3, [r3, #0]
+ 8000408:	f442 5200 	orr.w	r2, r2, #8192	; 0x2000
+ 800040c:	601a      	str	r2, [r3, #0]
+  EXTI->FTSR1 |= bit(B1_Pin); // Select the falling-edge trigger for Line 13 (See 14.5.4)
+ 800040e:	4b1d      	ldr	r3, [pc, #116]	; (8000484 <main+0x134>)
+ 8000410:	681b      	ldr	r3, [r3, #0]
+ 8000412:	68da      	ldr	r2, [r3, #12]
+ 8000414:	4b1b      	ldr	r3, [pc, #108]	; (8000484 <main+0x134>)
+ 8000416:	681b      	ldr	r3, [r3, #0]
+ 8000418:	f442 5200 	orr.w	r2, r2, #8192	; 0x2000
+ 800041c:	60da      	str	r2, [r3, #12]
+  NVIC->ISER[1] = (1<<8);     // Enable interrupts for vector position 40 (32 + 8). (See Table 58)
+ 800041e:	4b1a      	ldr	r3, [pc, #104]	; (8000488 <main+0x138>)
+ 8000420:	681b      	ldr	r3, [r3, #0]
+ 8000422:	f44f 7280 	mov.w	r2, #256	; 0x100
+ 8000426:	605a      	str	r2, [r3, #4]
+
+  // Attach External Interrupt Line 0 to Port C for PC0 (Data Available pin)
+  temp = SYSCFG->EXTICR[0];		// ??? add comment here
+ 8000428:	4b15      	ldr	r3, [pc, #84]	; (8000480 <main+0x130>)
+ 800042a:	681b      	ldr	r3, [r3, #0]
+ 800042c:	689b      	ldr	r3, [r3, #8]
+ 800042e:	607b      	str	r3, [r7, #4]
+  temp &= ~(0b1111 << 0);		// reset the 4 bits in the correct group of 4 for Line 0
+ 8000430:	687b      	ldr	r3, [r7, #4]
+ 8000432:	f023 030f 	bic.w	r3, r3, #15
+ 8000436:	607b      	str	r3, [r7, #4]
+  temp |=  (0b0010 << 0);		// set the 4 bits to ???? for ???? (which Port?)
+ 8000438:	687b      	ldr	r3, [r7, #4]
+ 800043a:	f043 0302 	orr.w	r3, r3, #2
+ 800043e:	607b      	str	r3, [r7, #4]
+  SYSCFG->EXTICR[0] = temp;		// put back where???
+ 8000440:	4b0f      	ldr	r3, [pc, #60]	; (8000480 <main+0x130>)
+ 8000442:	681b      	ldr	r3, [r3, #0]
+ 8000444:	687a      	ldr	r2, [r7, #4]
+ 8000446:	609a      	str	r2, [r3, #8]
+
+  // Enable Interrupts for Line 0 (See 14.3.4)
+  EXTI->IMR1 |= bit(DA_Pin);	// Remove mask for Line 0 (See 14.5.1)
+ 8000448:	4b0e      	ldr	r3, [pc, #56]	; (8000484 <main+0x134>)
+ 800044a:	681b      	ldr	r3, [r3, #0]
+ 800044c:	681a      	ldr	r2, [r3, #0]
+ 800044e:	4b0d      	ldr	r3, [pc, #52]	; (8000484 <main+0x134>)
+ 8000450:	681b      	ldr	r3, [r3, #0]
+ 8000452:	f042 0201 	orr.w	r2, r2, #1
+ 8000456:	601a      	str	r2, [r3, #0]
+  EXTI->RTSR1 |= bit(DA_Pin);	// Select the rising-edge trigger for Line 0 (See 14.5.3)
+ 8000458:	4b0a      	ldr	r3, [pc, #40]	; (8000484 <main+0x134>)
+ 800045a:	681b      	ldr	r3, [r3, #0]
+ 800045c:	689a      	ldr	r2, [r3, #8]
+ 800045e:	4b09      	ldr	r3, [pc, #36]	; (8000484 <main+0x134>)
+ 8000460:	681b      	ldr	r3, [r3, #0]
+ 8000462:	f042 0201 	orr.w	r2, r2, #1
+ 8000466:	609a      	str	r2, [r3, #8]
+  NVIC->ISER[0] = (1<<6);        // Enable interrupts for vector position 6. (See Table 58)
+ 8000468:	4b07      	ldr	r3, [pc, #28]	; (8000488 <main+0x138>)
+ 800046a:	681b      	ldr	r3, [r3, #0]
+ 800046c:	2240      	movs	r2, #64	; 0x40
+ 800046e:	601a      	str	r2, [r3, #0]
+
+  // infinite loop, waiting for interrupts
+  while (1);
+ 8000470:	e7fe      	b.n	8000470 <main+0x120>
+ 8000472:	bf00      	nop
+ 8000474:	20000004 	.word	0x20000004
+ 8000478:	2000000c 	.word	0x2000000c
+ 800047c:	20000008 	.word	0x20000008
+ 8000480:	20000014 	.word	0x20000014
+ 8000484:	20000010 	.word	0x20000010
+ 8000488:	20000018 	.word	0x20000018
+
+0800048c <EXTI15_10_IRQHandler>:
+}
+
+// Interrupt Service Routine for Line 13 - part of group 10 through 15 (see Table 58)
+void EXTI15_10_IRQHandler(void){ // see startup code for NVIC IRQ handler names
+ 800048c:	b580      	push	{r7, lr}
+ 800048e:	af00      	add	r7, sp, #0
+
+  // Check for interrupt from B1 pin (13) for the Line 13 trigger in the Pending Register (See 14.5.6)
+  if(EXTI->PR1 & bit(B1_Pin)){
+ 8000490:	4b25      	ldr	r3, [pc, #148]	; (8000528 <EXTI15_10_IRQHandler+0x9c>)
+ 8000492:	681b      	ldr	r3, [r3, #0]
+ 8000494:	695b      	ldr	r3, [r3, #20]
+ 8000496:	f403 5300 	and.w	r3, r3, #8192	; 0x2000
+ 800049a:	2b00      	cmp	r3, #0
+ 800049c:	d041      	beq.n	8000522 <EXTI15_10_IRQHandler+0x96>
+
+    // Reset system
+    alarm = false;
+ 800049e:	4b23      	ldr	r3, [pc, #140]	; (800052c <EXTI15_10_IRQHandler+0xa0>)
+ 80004a0:	2200      	movs	r2, #0
+ 80004a2:	701a      	strb	r2, [r3, #0]
+    locked = false;
+ 80004a4:	4b22      	ldr	r3, [pc, #136]	; (8000530 <EXTI15_10_IRQHandler+0xa4>)
+ 80004a6:	2200      	movs	r2, #0
+ 80004a8:	701a      	strb	r2, [r3, #0]
+    entering_password = false;
+ 80004aa:	4b22      	ldr	r3, [pc, #136]	; (8000534 <EXTI15_10_IRQHandler+0xa8>)
+ 80004ac:	2200      	movs	r2, #0
+ 80004ae:	701a      	strb	r2, [r3, #0]
+    saving_password = false;
+ 80004b0:	4b21      	ldr	r3, [pc, #132]	; (8000538 <EXTI15_10_IRQHandler+0xac>)
+ 80004b2:	2200      	movs	r2, #0
+ 80004b4:	701a      	strb	r2, [r3, #0]
+    num_attempts = 0;
+ 80004b6:	4b21      	ldr	r3, [pc, #132]	; (800053c <EXTI15_10_IRQHandler+0xb0>)
+ 80004b8:	2200      	movs	r2, #0
+ 80004ba:	601a      	str	r2, [r3, #0]
+    password_index = 0;
+ 80004bc:	4b20      	ldr	r3, [pc, #128]	; (8000540 <EXTI15_10_IRQHandler+0xb4>)
+ 80004be:	2200      	movs	r2, #0
+ 80004c0:	601a      	str	r2, [r3, #0]
+
+    // Turn off lights
+    GPIO_write_pin(L2_Port, L2_Pin, 0); // turn off L2 (LED2)
+ 80004c2:	4b20      	ldr	r3, [pc, #128]	; (8000544 <EXTI15_10_IRQHandler+0xb8>)
+ 80004c4:	681b      	ldr	r3, [r3, #0]
+ 80004c6:	2200      	movs	r2, #0
+ 80004c8:	2105      	movs	r1, #5
+ 80004ca:	4618      	mov	r0, r3
+ 80004cc:	f7ff ff03 	bl	80002d6 <GPIO_write_pin>
+    GPIO_write_pin(LR_Port, LR_Pin, 0); // turn off Red LED (LR)
+ 80004d0:	4b1c      	ldr	r3, [pc, #112]	; (8000544 <EXTI15_10_IRQHandler+0xb8>)
+ 80004d2:	681b      	ldr	r3, [r3, #0]
+ 80004d4:	2200      	movs	r2, #0
+ 80004d6:	2107      	movs	r1, #7
+ 80004d8:	4618      	mov	r0, r3
+ 80004da:	f7ff fefc 	bl	80002d6 <GPIO_write_pin>
+    GPIO_write_pin(LG_Port, LG_Pin, 0); // turn off Green LED (LG)
+ 80004de:	4b19      	ldr	r3, [pc, #100]	; (8000544 <EXTI15_10_IRQHandler+0xb8>)
+ 80004e0:	681b      	ldr	r3, [r3, #0]
+ 80004e2:	2200      	movs	r2, #0
+ 80004e4:	2108      	movs	r1, #8
+ 80004e6:	4618      	mov	r0, r3
+ 80004e8:	f7ff fef5 	bl	80002d6 <GPIO_write_pin>
+    GPIO_write_pin(LB_Port, LB_Pin, 0); // turn off Blue LED (LB)
+ 80004ec:	4b15      	ldr	r3, [pc, #84]	; (8000544 <EXTI15_10_IRQHandler+0xb8>)
+ 80004ee:	681b      	ldr	r3, [r3, #0]
+ 80004f0:	2200      	movs	r2, #0
+ 80004f2:	2109      	movs	r1, #9
+ 80004f4:	4618      	mov	r0, r3
+ 80004f6:	f7ff feee 	bl	80002d6 <GPIO_write_pin>
+
+    // De-bounce switch
+    for (i=0;i<5000;i++); // wait while the button is bouncing before clearing the interrupt
+ 80004fa:	4b13      	ldr	r3, [pc, #76]	; (8000548 <EXTI15_10_IRQHandler+0xbc>)
+ 80004fc:	2200      	movs	r2, #0
+ 80004fe:	601a      	str	r2, [r3, #0]
+ 8000500:	e004      	b.n	800050c <EXTI15_10_IRQHandler+0x80>
+ 8000502:	4b11      	ldr	r3, [pc, #68]	; (8000548 <EXTI15_10_IRQHandler+0xbc>)
+ 8000504:	681b      	ldr	r3, [r3, #0]
+ 8000506:	3301      	adds	r3, #1
+ 8000508:	4a0f      	ldr	r2, [pc, #60]	; (8000548 <EXTI15_10_IRQHandler+0xbc>)
+ 800050a:	6013      	str	r3, [r2, #0]
+ 800050c:	4b0e      	ldr	r3, [pc, #56]	; (8000548 <EXTI15_10_IRQHandler+0xbc>)
+ 800050e:	681b      	ldr	r3, [r3, #0]
+ 8000510:	f241 3287 	movw	r2, #4999	; 0x1387
+ 8000514:	4293      	cmp	r3, r2
+ 8000516:	ddf4      	ble.n	8000502 <EXTI15_10_IRQHandler+0x76>
+
+    // Clear pending interrupt for B1 (PC13) on Line 13 (See 14.5.6)
+    EXTI->PR1 = bit(B1_Pin); // clear by writing a '1' to the reset signal
+ 8000518:	4b03      	ldr	r3, [pc, #12]	; (8000528 <EXTI15_10_IRQHandler+0x9c>)
+ 800051a:	681b      	ldr	r3, [r3, #0]
+ 800051c:	f44f 5200 	mov.w	r2, #8192	; 0x2000
+ 8000520:	615a      	str	r2, [r3, #20]
+  }
+}
+ 8000522:	bf00      	nop
+ 8000524:	bd80      	pop	{r7, pc}
+ 8000526:	bf00      	nop
+ 8000528:	20000010 	.word	0x20000010
+ 800052c:	2000009b 	.word	0x2000009b
+ 8000530:	2000009a 	.word	0x2000009a
+ 8000534:	20000099 	.word	0x20000099
+ 8000538:	20000098 	.word	0x20000098
+ 800053c:	20000044 	.word	0x20000044
+ 8000540:	20000040 	.word	0x20000040
+ 8000544:	20000004 	.word	0x20000004
+ 8000548:	2000003c 	.word	0x2000003c
+
+0800054c <EXTI0_IRQHandler>:
+
+// Interrupt Service Routine for Line 0 (DA is PC0)
+void EXTI0_IRQHandler(void){ // see startup code in reading for NVIC IRQ handler names for Line 0
+ 800054c:	b580      	push	{r7, lr}
+ 800054e:	b082      	sub	sp, #8
+ 8000550:	af00      	add	r7, sp, #0
+
+  // Check the Pending Register for a trigger on Line 0 (See 14.5.6) because Data Available pin is pin 0.
+  if(EXTI->PR1 & bit(DA_Pin)){
+ 8000552:	4b98      	ldr	r3, [pc, #608]	; (80007b4 <EXTI0_IRQHandler+0x268>)
+ 8000554:	681b      	ldr	r3, [r3, #0]
+ 8000556:	695b      	ldr	r3, [r3, #20]
+ 8000558:	f003 0301 	and.w	r3, r3, #1
+ 800055c:	2b00      	cmp	r3, #0
+ 800055e:	f000 81cd 	beq.w	80008fc <EXTI0_IRQHandler+0x3b0>
+
+    // Read data
+    unsigned char key = keypad_decode();  // determine which key was pressed
+ 8000562:	f000 f9e5 	bl	8000930 <keypad_decode>
+ 8000566:	4603      	mov	r3, r0
+ 8000568:	71fb      	strb	r3, [r7, #7]
+
+    if(!alarm){
+ 800056a:	4b93      	ldr	r3, [pc, #588]	; (80007b8 <EXTI0_IRQHandler+0x26c>)
+ 800056c:	781b      	ldrb	r3, [r3, #0]
+ 800056e:	f083 0301 	eor.w	r3, r3, #1
+ 8000572:	b2db      	uxtb	r3, r3
+ 8000574:	2b00      	cmp	r3, #0
+ 8000576:	f000 81bd 	beq.w	80008f4 <EXTI0_IRQHandler+0x3a8>
+
+      // Blink LED2 to show button press detected
+      GPIO_write_pin(L2_Port, L2_Pin, 1); // LED2 on
+ 800057a:	4b90      	ldr	r3, [pc, #576]	; (80007bc <EXTI0_IRQHandler+0x270>)
+ 800057c:	681b      	ldr	r3, [r3, #0]
+ 800057e:	2201      	movs	r2, #1
+ 8000580:	2105      	movs	r1, #5
+ 8000582:	4618      	mov	r0, r3
+ 8000584:	f7ff fea7 	bl	80002d6 <GPIO_write_pin>
+      for (i=0;i<10000;i++);              // short delay
+ 8000588:	4b8d      	ldr	r3, [pc, #564]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 800058a:	2200      	movs	r2, #0
+ 800058c:	601a      	str	r2, [r3, #0]
+ 800058e:	e004      	b.n	800059a <EXTI0_IRQHandler+0x4e>
+ 8000590:	4b8b      	ldr	r3, [pc, #556]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 8000592:	681b      	ldr	r3, [r3, #0]
+ 8000594:	3301      	adds	r3, #1
+ 8000596:	4a8a      	ldr	r2, [pc, #552]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 8000598:	6013      	str	r3, [r2, #0]
+ 800059a:	4b89      	ldr	r3, [pc, #548]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 800059c:	681b      	ldr	r3, [r3, #0]
+ 800059e:	f242 720f 	movw	r2, #9999	; 0x270f
+ 80005a2:	4293      	cmp	r3, r2
+ 80005a4:	ddf4      	ble.n	8000590 <EXTI0_IRQHandler+0x44>
+      GPIO_write_pin(L2_Port, L2_Pin, 0); // LED2 off
+ 80005a6:	4b85      	ldr	r3, [pc, #532]	; (80007bc <EXTI0_IRQHandler+0x270>)
+ 80005a8:	681b      	ldr	r3, [r3, #0]
+ 80005aa:	2200      	movs	r2, #0
+ 80005ac:	2105      	movs	r1, #5
+ 80005ae:	4618      	mov	r0, r3
+ 80005b0:	f7ff fe91 	bl	80002d6 <GPIO_write_pin>
+
+      // Based on what key was pressed, do something (each case)
+      switch(key){
+ 80005b4:	79fb      	ldrb	r3, [r7, #7]
+ 80005b6:	3b0a      	subs	r3, #10
+ 80005b8:	2b05      	cmp	r3, #5
+ 80005ba:	f200 8138 	bhi.w	800082e <EXTI0_IRQHandler+0x2e2>
+ 80005be:	a201      	add	r2, pc, #4	; (adr r2, 80005c4 <EXTI0_IRQHandler+0x78>)
+ 80005c0:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
+ 80005c4:	080005dd 	.word	0x080005dd
+ 80005c8:	0800064d 	.word	0x0800064d
+ 80005cc:	080006c3 	.word	0x080006c3
+ 80005d0:	08000723 	.word	0x08000723
+ 80005d4:	080008e3 	.word	0x080008e3
+ 80005d8:	080008e3 	.word	0x080008e3
+
+        case 0xA: // button "A" was pressed
+
+          if(locked == false){ // if not already locked
+ 80005dc:	4b79      	ldr	r3, [pc, #484]	; (80007c4 <EXTI0_IRQHandler+0x278>)
+ 80005de:	781b      	ldrb	r3, [r3, #0]
+ 80005e0:	f083 0301 	eor.w	r3, r3, #1
+ 80005e4:	b2db      	uxtb	r3, r3
+ 80005e6:	2b00      	cmp	r3, #0
+ 80005e8:	f000 817d 	beq.w	80008e6 <EXTI0_IRQHandler+0x39a>
+
+            // Clear temporary password
+            for(i=0; i < 10; i++)
+ 80005ec:	4b74      	ldr	r3, [pc, #464]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 80005ee:	2200      	movs	r2, #0
+ 80005f0:	601a      	str	r2, [r3, #0]
+ 80005f2:	e00b      	b.n	800060c <EXTI0_IRQHandler+0xc0>
+              temporary_password[i] = -1;
+ 80005f4:	4b72      	ldr	r3, [pc, #456]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 80005f6:	681b      	ldr	r3, [r3, #0]
+ 80005f8:	4a73      	ldr	r2, [pc, #460]	; (80007c8 <EXTI0_IRQHandler+0x27c>)
+ 80005fa:	f04f 31ff 	mov.w	r1, #4294967295
+ 80005fe:	f842 1023 	str.w	r1, [r2, r3, lsl #2]
+            for(i=0; i < 10; i++)
+ 8000602:	4b6f      	ldr	r3, [pc, #444]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 8000604:	681b      	ldr	r3, [r3, #0]
+ 8000606:	3301      	adds	r3, #1
+ 8000608:	4a6d      	ldr	r2, [pc, #436]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 800060a:	6013      	str	r3, [r2, #0]
+ 800060c:	4b6c      	ldr	r3, [pc, #432]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 800060e:	681b      	ldr	r3, [r3, #0]
+ 8000610:	2b09      	cmp	r3, #9
+ 8000612:	ddef      	ble.n	80005f4 <EXTI0_IRQHandler+0xa8>
+
+            // Change status
+            saving_password = true;
+ 8000614:	4b6d      	ldr	r3, [pc, #436]	; (80007cc <EXTI0_IRQHandler+0x280>)
+ 8000616:	2201      	movs	r2, #1
+ 8000618:	701a      	strb	r2, [r3, #0]
+            password_index = 0;  // reset password index
+ 800061a:	4b6d      	ldr	r3, [pc, #436]	; (80007d0 <EXTI0_IRQHandler+0x284>)
+ 800061c:	2200      	movs	r2, #0
+ 800061e:	601a      	str	r2, [r3, #0]
+
+            // Turn off RGB indicator lights
+            GPIO_write_pin(LR_Port, LR_Pin, 0); // turn off Red LED (LR)
+ 8000620:	4b66      	ldr	r3, [pc, #408]	; (80007bc <EXTI0_IRQHandler+0x270>)
+ 8000622:	681b      	ldr	r3, [r3, #0]
+ 8000624:	2200      	movs	r2, #0
+ 8000626:	2107      	movs	r1, #7
+ 8000628:	4618      	mov	r0, r3
+ 800062a:	f7ff fe54 	bl	80002d6 <GPIO_write_pin>
+            GPIO_write_pin(LG_Port, LG_Pin, 0); // turn off Green LED (LG)
+ 800062e:	4b63      	ldr	r3, [pc, #396]	; (80007bc <EXTI0_IRQHandler+0x270>)
+ 8000630:	681b      	ldr	r3, [r3, #0]
+ 8000632:	2200      	movs	r2, #0
+ 8000634:	2108      	movs	r1, #8
+ 8000636:	4618      	mov	r0, r3
+ 8000638:	f7ff fe4d 	bl	80002d6 <GPIO_write_pin>
+            GPIO_write_pin(LB_Port, LB_Pin, 0); // turn off Blue LED (LB)
+ 800063c:	4b5f      	ldr	r3, [pc, #380]	; (80007bc <EXTI0_IRQHandler+0x270>)
+ 800063e:	681b      	ldr	r3, [r3, #0]
+ 8000640:	2200      	movs	r2, #0
+ 8000642:	2109      	movs	r1, #9
+ 8000644:	4618      	mov	r0, r3
+ 8000646:	f7ff fe46 	bl	80002d6 <GPIO_write_pin>
+          }
+
+          break;
+ 800064a:	e14c      	b.n	80008e6 <EXTI0_IRQHandler+0x39a>
+
+        case 0xB: // button "B" was pressed
+
+          if(locked == false){ // if not already locked
+ 800064c:	4b5d      	ldr	r3, [pc, #372]	; (80007c4 <EXTI0_IRQHandler+0x278>)
+ 800064e:	781b      	ldrb	r3, [r3, #0]
+ 8000650:	f083 0301 	eor.w	r3, r3, #1
+ 8000654:	b2db      	uxtb	r3, r3
+ 8000656:	2b00      	cmp	r3, #0
+ 8000658:	f000 8147 	beq.w	80008ea <EXTI0_IRQHandler+0x39e>
+
+            // Store temp password as current password
+            for(i = 0; i < 10; i++)
+ 800065c:	4b58      	ldr	r3, [pc, #352]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 800065e:	2200      	movs	r2, #0
+ 8000660:	601a      	str	r2, [r3, #0]
+ 8000662:	e00e      	b.n	8000682 <EXTI0_IRQHandler+0x136>
+              current_password[i] = temporary_password[i];
+ 8000664:	4b56      	ldr	r3, [pc, #344]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 8000666:	681a      	ldr	r2, [r3, #0]
+ 8000668:	4b55      	ldr	r3, [pc, #340]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 800066a:	681b      	ldr	r3, [r3, #0]
+ 800066c:	4956      	ldr	r1, [pc, #344]	; (80007c8 <EXTI0_IRQHandler+0x27c>)
+ 800066e:	f851 2022 	ldr.w	r2, [r1, r2, lsl #2]
+ 8000672:	4958      	ldr	r1, [pc, #352]	; (80007d4 <EXTI0_IRQHandler+0x288>)
+ 8000674:	f841 2023 	str.w	r2, [r1, r3, lsl #2]
+            for(i = 0; i < 10; i++)
+ 8000678:	4b51      	ldr	r3, [pc, #324]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 800067a:	681b      	ldr	r3, [r3, #0]
+ 800067c:	3301      	adds	r3, #1
+ 800067e:	4a50      	ldr	r2, [pc, #320]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 8000680:	6013      	str	r3, [r2, #0]
+ 8000682:	4b4f      	ldr	r3, [pc, #316]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 8000684:	681b      	ldr	r3, [r3, #0]
+ 8000686:	2b09      	cmp	r3, #9
+ 8000688:	ddec      	ble.n	8000664 <EXTI0_IRQHandler+0x118>
+
+            // Update RGB indicator lights
+            GPIO_write_pin(LR_Port, LR_Pin, 0);
+ 800068a:	4b4c      	ldr	r3, [pc, #304]	; (80007bc <EXTI0_IRQHandler+0x270>)
+ 800068c:	681b      	ldr	r3, [r3, #0]
+ 800068e:	2200      	movs	r2, #0
+ 8000690:	2107      	movs	r1, #7
+ 8000692:	4618      	mov	r0, r3
+ 8000694:	f7ff fe1f 	bl	80002d6 <GPIO_write_pin>
+            GPIO_write_pin(LG_Port, LG_Pin, 0);
+ 8000698:	4b48      	ldr	r3, [pc, #288]	; (80007bc <EXTI0_IRQHandler+0x270>)
+ 800069a:	681b      	ldr	r3, [r3, #0]
+ 800069c:	2200      	movs	r2, #0
+ 800069e:	2108      	movs	r1, #8
+ 80006a0:	4618      	mov	r0, r3
+ 80006a2:	f7ff fe18 	bl	80002d6 <GPIO_write_pin>
+            GPIO_write_pin(LB_Port, LB_Pin, 1); // turn *on* blue LED (new password entered)
+ 80006a6:	4b45      	ldr	r3, [pc, #276]	; (80007bc <EXTI0_IRQHandler+0x270>)
+ 80006a8:	681b      	ldr	r3, [r3, #0]
+ 80006aa:	2201      	movs	r2, #1
+ 80006ac:	2109      	movs	r1, #9
+ 80006ae:	4618      	mov	r0, r3
+ 80006b0:	f7ff fe11 	bl	80002d6 <GPIO_write_pin>
+
+            // Change status
+            saving_password = false;
+ 80006b4:	4b45      	ldr	r3, [pc, #276]	; (80007cc <EXTI0_IRQHandler+0x280>)
+ 80006b6:	2200      	movs	r2, #0
+ 80006b8:	701a      	strb	r2, [r3, #0]
+            locked = true;
+ 80006ba:	4b42      	ldr	r3, [pc, #264]	; (80007c4 <EXTI0_IRQHandler+0x278>)
+ 80006bc:	2201      	movs	r2, #1
+ 80006be:	701a      	strb	r2, [r3, #0]
+          }
+
+          break;
+ 80006c0:	e113      	b.n	80008ea <EXTI0_IRQHandler+0x39e>
+
+        case 0xC: // button "C" was pressed
+
+          // Clear temporary password
+          for(i = 0; i < 10; i++)
+ 80006c2:	4b3f      	ldr	r3, [pc, #252]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 80006c4:	2200      	movs	r2, #0
+ 80006c6:	601a      	str	r2, [r3, #0]
+ 80006c8:	e00b      	b.n	80006e2 <EXTI0_IRQHandler+0x196>
+            temporary_password[i] = -1;
+ 80006ca:	4b3d      	ldr	r3, [pc, #244]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 80006cc:	681b      	ldr	r3, [r3, #0]
+ 80006ce:	4a3e      	ldr	r2, [pc, #248]	; (80007c8 <EXTI0_IRQHandler+0x27c>)
+ 80006d0:	f04f 31ff 	mov.w	r1, #4294967295
+ 80006d4:	f842 1023 	str.w	r1, [r2, r3, lsl #2]
+          for(i = 0; i < 10; i++)
+ 80006d8:	4b39      	ldr	r3, [pc, #228]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 80006da:	681b      	ldr	r3, [r3, #0]
+ 80006dc:	3301      	adds	r3, #1
+ 80006de:	4a38      	ldr	r2, [pc, #224]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 80006e0:	6013      	str	r3, [r2, #0]
+ 80006e2:	4b37      	ldr	r3, [pc, #220]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 80006e4:	681b      	ldr	r3, [r3, #0]
+ 80006e6:	2b09      	cmp	r3, #9
+ 80006e8:	ddef      	ble.n	80006ca <EXTI0_IRQHandler+0x17e>
+
+          // Change status
+          entering_password = true;
+ 80006ea:	4b3b      	ldr	r3, [pc, #236]	; (80007d8 <EXTI0_IRQHandler+0x28c>)
+ 80006ec:	2201      	movs	r2, #1
+ 80006ee:	701a      	strb	r2, [r3, #0]
+          password_index = 0; // reset password index
+ 80006f0:	4b37      	ldr	r3, [pc, #220]	; (80007d0 <EXTI0_IRQHandler+0x284>)
+ 80006f2:	2200      	movs	r2, #0
+ 80006f4:	601a      	str	r2, [r3, #0]
+
+          // Turn off RGB indicator lights
+          GPIO_write_pin(LR_Port, LR_Pin, 0); // turn off Red LED (LR)
+ 80006f6:	4b31      	ldr	r3, [pc, #196]	; (80007bc <EXTI0_IRQHandler+0x270>)
+ 80006f8:	681b      	ldr	r3, [r3, #0]
+ 80006fa:	2200      	movs	r2, #0
+ 80006fc:	2107      	movs	r1, #7
+ 80006fe:	4618      	mov	r0, r3
+ 8000700:	f7ff fde9 	bl	80002d6 <GPIO_write_pin>
+          GPIO_write_pin(LG_Port, LG_Pin, 0); // turn off Green LED (LG)
+ 8000704:	4b2d      	ldr	r3, [pc, #180]	; (80007bc <EXTI0_IRQHandler+0x270>)
+ 8000706:	681b      	ldr	r3, [r3, #0]
+ 8000708:	2200      	movs	r2, #0
+ 800070a:	2108      	movs	r1, #8
+ 800070c:	4618      	mov	r0, r3
+ 800070e:	f7ff fde2 	bl	80002d6 <GPIO_write_pin>
+          GPIO_write_pin(LB_Port, LB_Pin, 0); // turn off Blue LED (LB)
+ 8000712:	4b2a      	ldr	r3, [pc, #168]	; (80007bc <EXTI0_IRQHandler+0x270>)
+ 8000714:	681b      	ldr	r3, [r3, #0]
+ 8000716:	2200      	movs	r2, #0
+ 8000718:	2109      	movs	r1, #9
+ 800071a:	4618      	mov	r0, r3
+ 800071c:	f7ff fddb 	bl	80002d6 <GPIO_write_pin>
+
+          break;
+ 8000720:	e0e8      	b.n	80008f4 <EXTI0_IRQHandler+0x3a8>
+
+        case 0xD: // button "D" was pressed
+
+          if(entering_password){ // if password was being entered
+ 8000722:	4b2d      	ldr	r3, [pc, #180]	; (80007d8 <EXTI0_IRQHandler+0x28c>)
+ 8000724:	781b      	ldrb	r3, [r3, #0]
+ 8000726:	2b00      	cmp	r3, #0
+ 8000728:	f000 80e1 	beq.w	80008ee <EXTI0_IRQHandler+0x3a2>
+
+            // Change status
+            entering_password = false;
+ 800072c:	4b2a      	ldr	r3, [pc, #168]	; (80007d8 <EXTI0_IRQHandler+0x28c>)
+ 800072e:	2200      	movs	r2, #0
+ 8000730:	701a      	strb	r2, [r3, #0]
+            password_index = 0;
+ 8000732:	4b27      	ldr	r3, [pc, #156]	; (80007d0 <EXTI0_IRQHandler+0x284>)
+ 8000734:	2200      	movs	r2, #0
+ 8000736:	601a      	str	r2, [r3, #0]
+
+            // Compare temporary password with current password
+            locked = false;
+ 8000738:	4b22      	ldr	r3, [pc, #136]	; (80007c4 <EXTI0_IRQHandler+0x278>)
+ 800073a:	2200      	movs	r2, #0
+ 800073c:	701a      	strb	r2, [r3, #0]
+            for(i = 0; i < 10; i++){
+ 800073e:	4b20      	ldr	r3, [pc, #128]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 8000740:	2200      	movs	r2, #0
+ 8000742:	601a      	str	r2, [r3, #0]
+ 8000744:	e013      	b.n	800076e <EXTI0_IRQHandler+0x222>
+              if(current_password[i] != temporary_password[i])
+ 8000746:	4b1e      	ldr	r3, [pc, #120]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 8000748:	681b      	ldr	r3, [r3, #0]
+ 800074a:	4a22      	ldr	r2, [pc, #136]	; (80007d4 <EXTI0_IRQHandler+0x288>)
+ 800074c:	f852 2023 	ldr.w	r2, [r2, r3, lsl #2]
+ 8000750:	4b1b      	ldr	r3, [pc, #108]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 8000752:	681b      	ldr	r3, [r3, #0]
+ 8000754:	491c      	ldr	r1, [pc, #112]	; (80007c8 <EXTI0_IRQHandler+0x27c>)
+ 8000756:	f851 3023 	ldr.w	r3, [r1, r3, lsl #2]
+ 800075a:	429a      	cmp	r2, r3
+ 800075c:	d002      	beq.n	8000764 <EXTI0_IRQHandler+0x218>
+                locked = true; // incorrect, keep locked
+ 800075e:	4b19      	ldr	r3, [pc, #100]	; (80007c4 <EXTI0_IRQHandler+0x278>)
+ 8000760:	2201      	movs	r2, #1
+ 8000762:	701a      	strb	r2, [r3, #0]
+            for(i = 0; i < 10; i++){
+ 8000764:	4b16      	ldr	r3, [pc, #88]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 8000766:	681b      	ldr	r3, [r3, #0]
+ 8000768:	3301      	adds	r3, #1
+ 800076a:	4a15      	ldr	r2, [pc, #84]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 800076c:	6013      	str	r3, [r2, #0]
+ 800076e:	4b14      	ldr	r3, [pc, #80]	; (80007c0 <EXTI0_IRQHandler+0x274>)
+ 8000770:	681b      	ldr	r3, [r3, #0]
+ 8000772:	2b09      	cmp	r3, #9
+ 8000774:	dde7      	ble.n	8000746 <EXTI0_IRQHandler+0x1fa>
+            }
+
+            // If password incorrect
+            if(locked){
+ 8000776:	4b13      	ldr	r3, [pc, #76]	; (80007c4 <EXTI0_IRQHandler+0x278>)
+ 8000778:	781b      	ldrb	r3, [r3, #0]
+ 800077a:	2b00      	cmp	r3, #0
+ 800077c:	d030      	beq.n	80007e0 <EXTI0_IRQHandler+0x294>
+              GPIO_write_pin(LR_Port, LR_Pin, 1); // turn *on* red (incorrect password)
+ 800077e:	4b0f      	ldr	r3, [pc, #60]	; (80007bc <EXTI0_IRQHandler+0x270>)
+ 8000780:	681b      	ldr	r3, [r3, #0]
+ 8000782:	2201      	movs	r2, #1
+ 8000784:	2107      	movs	r1, #7
+ 8000786:	4618      	mov	r0, r3
+ 8000788:	f7ff fda5 	bl	80002d6 <GPIO_write_pin>
+              GPIO_write_pin(LG_Port, LG_Pin, 0);
+ 800078c:	4b0b      	ldr	r3, [pc, #44]	; (80007bc <EXTI0_IRQHandler+0x270>)
+ 800078e:	681b      	ldr	r3, [r3, #0]
+ 8000790:	2200      	movs	r2, #0
+ 8000792:	2108      	movs	r1, #8
+ 8000794:	4618      	mov	r0, r3
+ 8000796:	f7ff fd9e 	bl	80002d6 <GPIO_write_pin>
+              GPIO_write_pin(LB_Port, LB_Pin, 0);
+ 800079a:	4b08      	ldr	r3, [pc, #32]	; (80007bc <EXTI0_IRQHandler+0x270>)
+ 800079c:	681b      	ldr	r3, [r3, #0]
+ 800079e:	2200      	movs	r2, #0
+ 80007a0:	2109      	movs	r1, #9
+ 80007a2:	4618      	mov	r0, r3
+ 80007a4:	f7ff fd97 	bl	80002d6 <GPIO_write_pin>
+              num_attempts++;
+ 80007a8:	4b0c      	ldr	r3, [pc, #48]	; (80007dc <EXTI0_IRQHandler+0x290>)
+ 80007aa:	681b      	ldr	r3, [r3, #0]
+ 80007ac:	3301      	adds	r3, #1
+ 80007ae:	4a0b      	ldr	r2, [pc, #44]	; (80007dc <EXTI0_IRQHandler+0x290>)
+ 80007b0:	6013      	str	r3, [r2, #0]
+ 80007b2:	e02d      	b.n	8000810 <EXTI0_IRQHandler+0x2c4>
+ 80007b4:	20000010 	.word	0x20000010
+ 80007b8:	2000009b 	.word	0x2000009b
+ 80007bc:	20000004 	.word	0x20000004
+ 80007c0:	2000003c 	.word	0x2000003c
+ 80007c4:	2000009a 	.word	0x2000009a
+ 80007c8:	20000070 	.word	0x20000070
+ 80007cc:	20000098 	.word	0x20000098
+ 80007d0:	20000040 	.word	0x20000040
+ 80007d4:	20000048 	.word	0x20000048
+ 80007d8:	20000099 	.word	0x20000099
+ 80007dc:	20000044 	.word	0x20000044
+            }
+            else{ // password correct
+              GPIO_write_pin(LR_Port, LR_Pin, 0);
+ 80007e0:	4b48      	ldr	r3, [pc, #288]	; (8000904 <EXTI0_IRQHandler+0x3b8>)
+ 80007e2:	681b      	ldr	r3, [r3, #0]
+ 80007e4:	2200      	movs	r2, #0
+ 80007e6:	2107      	movs	r1, #7
+ 80007e8:	4618      	mov	r0, r3
+ 80007ea:	f7ff fd74 	bl	80002d6 <GPIO_write_pin>
+              GPIO_write_pin(LG_Port, LG_Pin, 1); // turn *on* green (correct password)
+ 80007ee:	4b45      	ldr	r3, [pc, #276]	; (8000904 <EXTI0_IRQHandler+0x3b8>)
+ 80007f0:	681b      	ldr	r3, [r3, #0]
+ 80007f2:	2201      	movs	r2, #1
+ 80007f4:	2108      	movs	r1, #8
+ 80007f6:	4618      	mov	r0, r3
+ 80007f8:	f7ff fd6d 	bl	80002d6 <GPIO_write_pin>
+              GPIO_write_pin(LB_Port, LB_Pin, 0);
+ 80007fc:	4b41      	ldr	r3, [pc, #260]	; (8000904 <EXTI0_IRQHandler+0x3b8>)
+ 80007fe:	681b      	ldr	r3, [r3, #0]
+ 8000800:	2200      	movs	r2, #0
+ 8000802:	2109      	movs	r1, #9
+ 8000804:	4618      	mov	r0, r3
+ 8000806:	f7ff fd66 	bl	80002d6 <GPIO_write_pin>
+              num_attempts = 0; // reset attempt count
+ 800080a:	4b3f      	ldr	r3, [pc, #252]	; (8000908 <EXTI0_IRQHandler+0x3bc>)
+ 800080c:	2200      	movs	r2, #0
+ 800080e:	601a      	str	r2, [r3, #0]
+            }
+
+            // if 3 wrong passwords
+            if(num_attempts >= 3){
+ 8000810:	4b3d      	ldr	r3, [pc, #244]	; (8000908 <EXTI0_IRQHandler+0x3bc>)
+ 8000812:	681b      	ldr	r3, [r3, #0]
+ 8000814:	2b02      	cmp	r3, #2
+ 8000816:	dd6a      	ble.n	80008ee <EXTI0_IRQHandler+0x3a2>
+              GPIO_write_pin(L2_Port, L2_Pin, 1); // turn on LED2 (alarm)
+ 8000818:	4b3a      	ldr	r3, [pc, #232]	; (8000904 <EXTI0_IRQHandler+0x3b8>)
+ 800081a:	681b      	ldr	r3, [r3, #0]
+ 800081c:	2201      	movs	r2, #1
+ 800081e:	2105      	movs	r1, #5
+ 8000820:	4618      	mov	r0, r3
+ 8000822:	f7ff fd58 	bl	80002d6 <GPIO_write_pin>
+              alarm=true;
+ 8000826:	4b39      	ldr	r3, [pc, #228]	; (800090c <EXTI0_IRQHandler+0x3c0>)
+ 8000828:	2201      	movs	r2, #1
+ 800082a:	701a      	strb	r2, [r3, #0]
+            }
+          }
+
+          break;
+ 800082c:	e05f      	b.n	80008ee <EXTI0_IRQHandler+0x3a2>
+          break;
+
+        default: // this means a number was pressed
+
+          // if current status == storing new password
+          if(saving_password){
+ 800082e:	4b38      	ldr	r3, [pc, #224]	; (8000910 <EXTI0_IRQHandler+0x3c4>)
+ 8000830:	781b      	ldrb	r3, [r3, #0]
+ 8000832:	2b00      	cmp	r3, #0
+ 8000834:	d043      	beq.n	80008be <EXTI0_IRQHandler+0x372>
+            if(password_index < 10){
+ 8000836:	4b37      	ldr	r3, [pc, #220]	; (8000914 <EXTI0_IRQHandler+0x3c8>)
+ 8000838:	681b      	ldr	r3, [r3, #0]
+ 800083a:	2b09      	cmp	r3, #9
+ 800083c:	dc59      	bgt.n	80008f2 <EXTI0_IRQHandler+0x3a6>
+              temporary_password[password_index++] = key; // store digit
+ 800083e:	4b35      	ldr	r3, [pc, #212]	; (8000914 <EXTI0_IRQHandler+0x3c8>)
+ 8000840:	681b      	ldr	r3, [r3, #0]
+ 8000842:	1c5a      	adds	r2, r3, #1
+ 8000844:	4933      	ldr	r1, [pc, #204]	; (8000914 <EXTI0_IRQHandler+0x3c8>)
+ 8000846:	600a      	str	r2, [r1, #0]
+ 8000848:	79fa      	ldrb	r2, [r7, #7]
+ 800084a:	4933      	ldr	r1, [pc, #204]	; (8000918 <EXTI0_IRQHandler+0x3cc>)
+ 800084c:	f841 2023 	str.w	r2, [r1, r3, lsl #2]
+
+              // if max digits reached, finish and store
+              if(password_index == 10){
+ 8000850:	4b30      	ldr	r3, [pc, #192]	; (8000914 <EXTI0_IRQHandler+0x3c8>)
+ 8000852:	681b      	ldr	r3, [r3, #0]
+ 8000854:	2b0a      	cmp	r3, #10
+ 8000856:	d14c      	bne.n	80008f2 <EXTI0_IRQHandler+0x3a6>
+
+                // Store new password
+                for(i = 0; i < 10; i++)
+ 8000858:	4b30      	ldr	r3, [pc, #192]	; (800091c <EXTI0_IRQHandler+0x3d0>)
+ 800085a:	2200      	movs	r2, #0
+ 800085c:	601a      	str	r2, [r3, #0]
+ 800085e:	e00e      	b.n	800087e <EXTI0_IRQHandler+0x332>
+                  current_password[i] = temporary_password[i];
+ 8000860:	4b2e      	ldr	r3, [pc, #184]	; (800091c <EXTI0_IRQHandler+0x3d0>)
+ 8000862:	681a      	ldr	r2, [r3, #0]
+ 8000864:	4b2d      	ldr	r3, [pc, #180]	; (800091c <EXTI0_IRQHandler+0x3d0>)
+ 8000866:	681b      	ldr	r3, [r3, #0]
+ 8000868:	492b      	ldr	r1, [pc, #172]	; (8000918 <EXTI0_IRQHandler+0x3cc>)
+ 800086a:	f851 2022 	ldr.w	r2, [r1, r2, lsl #2]
+ 800086e:	492c      	ldr	r1, [pc, #176]	; (8000920 <EXTI0_IRQHandler+0x3d4>)
+ 8000870:	f841 2023 	str.w	r2, [r1, r3, lsl #2]
+                for(i = 0; i < 10; i++)
+ 8000874:	4b29      	ldr	r3, [pc, #164]	; (800091c <EXTI0_IRQHandler+0x3d0>)
+ 8000876:	681b      	ldr	r3, [r3, #0]
+ 8000878:	3301      	adds	r3, #1
+ 800087a:	4a28      	ldr	r2, [pc, #160]	; (800091c <EXTI0_IRQHandler+0x3d0>)
+ 800087c:	6013      	str	r3, [r2, #0]
+ 800087e:	4b27      	ldr	r3, [pc, #156]	; (800091c <EXTI0_IRQHandler+0x3d0>)
+ 8000880:	681b      	ldr	r3, [r3, #0]
+ 8000882:	2b09      	cmp	r3, #9
+ 8000884:	ddec      	ble.n	8000860 <EXTI0_IRQHandler+0x314>
+
+                // Update RGB indicater lights
+                GPIO_write_pin(LR_Port, LR_Pin, 0);
+ 8000886:	4b1f      	ldr	r3, [pc, #124]	; (8000904 <EXTI0_IRQHandler+0x3b8>)
+ 8000888:	681b      	ldr	r3, [r3, #0]
+ 800088a:	2200      	movs	r2, #0
+ 800088c:	2107      	movs	r1, #7
+ 800088e:	4618      	mov	r0, r3
+ 8000890:	f7ff fd21 	bl	80002d6 <GPIO_write_pin>
+                GPIO_write_pin(LG_Port, LG_Pin, 0);
+ 8000894:	4b1b      	ldr	r3, [pc, #108]	; (8000904 <EXTI0_IRQHandler+0x3b8>)
+ 8000896:	681b      	ldr	r3, [r3, #0]
+ 8000898:	2200      	movs	r2, #0
+ 800089a:	2108      	movs	r1, #8
+ 800089c:	4618      	mov	r0, r3
+ 800089e:	f7ff fd1a 	bl	80002d6 <GPIO_write_pin>
+                GPIO_write_pin(LB_Port, LB_Pin, 1); // turn on blue (new password entered)
+ 80008a2:	4b18      	ldr	r3, [pc, #96]	; (8000904 <EXTI0_IRQHandler+0x3b8>)
+ 80008a4:	681b      	ldr	r3, [r3, #0]
+ 80008a6:	2201      	movs	r2, #1
+ 80008a8:	2109      	movs	r1, #9
+ 80008aa:	4618      	mov	r0, r3
+ 80008ac:	f7ff fd13 	bl	80002d6 <GPIO_write_pin>
+
+                // Change status
+                saving_password = false;
+ 80008b0:	4b17      	ldr	r3, [pc, #92]	; (8000910 <EXTI0_IRQHandler+0x3c4>)
+ 80008b2:	2200      	movs	r2, #0
+ 80008b4:	701a      	strb	r2, [r3, #0]
+                locked = true;
+ 80008b6:	4b1b      	ldr	r3, [pc, #108]	; (8000924 <EXTI0_IRQHandler+0x3d8>)
+ 80008b8:	2201      	movs	r2, #1
+ 80008ba:	701a      	strb	r2, [r3, #0]
+          // if status == entering password to check
+          else if(entering_password){
+            if(password_index<10)
+              temporary_password[password_index++] = key; // store digit
+          }
+          break;
+ 80008bc:	e019      	b.n	80008f2 <EXTI0_IRQHandler+0x3a6>
+          else if(entering_password){
+ 80008be:	4b1a      	ldr	r3, [pc, #104]	; (8000928 <EXTI0_IRQHandler+0x3dc>)
+ 80008c0:	781b      	ldrb	r3, [r3, #0]
+ 80008c2:	2b00      	cmp	r3, #0
+ 80008c4:	d015      	beq.n	80008f2 <EXTI0_IRQHandler+0x3a6>
+            if(password_index<10)
+ 80008c6:	4b13      	ldr	r3, [pc, #76]	; (8000914 <EXTI0_IRQHandler+0x3c8>)
+ 80008c8:	681b      	ldr	r3, [r3, #0]
+ 80008ca:	2b09      	cmp	r3, #9
+ 80008cc:	dc11      	bgt.n	80008f2 <EXTI0_IRQHandler+0x3a6>
+              temporary_password[password_index++] = key; // store digit
+ 80008ce:	4b11      	ldr	r3, [pc, #68]	; (8000914 <EXTI0_IRQHandler+0x3c8>)
+ 80008d0:	681b      	ldr	r3, [r3, #0]
+ 80008d2:	1c5a      	adds	r2, r3, #1
+ 80008d4:	490f      	ldr	r1, [pc, #60]	; (8000914 <EXTI0_IRQHandler+0x3c8>)
+ 80008d6:	600a      	str	r2, [r1, #0]
+ 80008d8:	79fa      	ldrb	r2, [r7, #7]
+ 80008da:	490f      	ldr	r1, [pc, #60]	; (8000918 <EXTI0_IRQHandler+0x3cc>)
+ 80008dc:	f841 2023 	str.w	r2, [r1, r3, lsl #2]
+          break;
+ 80008e0:	e007      	b.n	80008f2 <EXTI0_IRQHandler+0x3a6>
+          break;
+ 80008e2:	bf00      	nop
+ 80008e4:	e006      	b.n	80008f4 <EXTI0_IRQHandler+0x3a8>
+          break;
+ 80008e6:	bf00      	nop
+ 80008e8:	e004      	b.n	80008f4 <EXTI0_IRQHandler+0x3a8>
+          break;
+ 80008ea:	bf00      	nop
+ 80008ec:	e002      	b.n	80008f4 <EXTI0_IRQHandler+0x3a8>
+          break;
+ 80008ee:	bf00      	nop
+ 80008f0:	e000      	b.n	80008f4 <EXTI0_IRQHandler+0x3a8>
+          break;
+ 80008f2:	bf00      	nop
+      }
+    }
+
+    // ??? add a comment to describe what the following line does
+    EXTI->PR1 = bit(DA_Pin);
+ 80008f4:	4b0d      	ldr	r3, [pc, #52]	; (800092c <EXTI0_IRQHandler+0x3e0>)
+ 80008f6:	681b      	ldr	r3, [r3, #0]
+ 80008f8:	2201      	movs	r2, #1
+ 80008fa:	615a      	str	r2, [r3, #20]
+  }
+}
+ 80008fc:	bf00      	nop
+ 80008fe:	3708      	adds	r7, #8
+ 8000900:	46bd      	mov	sp, r7
+ 8000902:	bd80      	pop	{r7, pc}
+ 8000904:	20000004 	.word	0x20000004
+ 8000908:	20000044 	.word	0x20000044
+ 800090c:	2000009b 	.word	0x2000009b
+ 8000910:	20000098 	.word	0x20000098
+ 8000914:	20000040 	.word	0x20000040
+ 8000918:	20000070 	.word	0x20000070
+ 800091c:	2000003c 	.word	0x2000003c
+ 8000920:	20000048 	.word	0x20000048
+ 8000924:	2000009a 	.word	0x2000009a
+ 8000928:	20000099 	.word	0x20000099
+ 800092c:	20000010 	.word	0x20000010
+
+08000930 <keypad_decode>:
+
+
+// ??? add a comment here to describe this function
+unsigned char keypad_decode(){
+ 8000930:	b580      	push	{r7, lr}
+ 8000932:	b082      	sub	sp, #8
+ 8000934:	af00      	add	r7, sp, #0
+  unsigned char key = 0x0;
+ 8000936:	2300      	movs	r3, #0
+ 8000938:	71fb      	strb	r3, [r7, #7]
+  unsigned char data = 0b0000;
+ 800093a:	2300      	movs	r3, #0
+ 800093c:	71bb      	strb	r3, [r7, #6]
+
+  // read the data pins and combine into the 4-bit value: D3_D2_D1_D0
+  if (GPIO_read_pin(D0_Port, D0_Pin))
+ 800093e:	4b48      	ldr	r3, [pc, #288]	; (8000a60 <keypad_decode+0x130>)
+ 8000940:	681b      	ldr	r3, [r3, #0]
+ 8000942:	2100      	movs	r1, #0
+ 8000944:	4618      	mov	r0, r3
+ 8000946:	f7ff fcb2 	bl	80002ae <GPIO_read_pin>
+ 800094a:	4603      	mov	r3, r0
+ 800094c:	2b00      	cmp	r3, #0
+ 800094e:	d003      	beq.n	8000958 <keypad_decode+0x28>
+    data |= bit(0);
+ 8000950:	79bb      	ldrb	r3, [r7, #6]
+ 8000952:	f043 0301 	orr.w	r3, r3, #1
+ 8000956:	71bb      	strb	r3, [r7, #6]
+  if (GPIO_read_pin(D1_Port, D1_Pin))
+ 8000958:	4b41      	ldr	r3, [pc, #260]	; (8000a60 <keypad_decode+0x130>)
+ 800095a:	681b      	ldr	r3, [r3, #0]
+ 800095c:	2101      	movs	r1, #1
+ 800095e:	4618      	mov	r0, r3
+ 8000960:	f7ff fca5 	bl	80002ae <GPIO_read_pin>
+ 8000964:	4603      	mov	r3, r0
+ 8000966:	2b00      	cmp	r3, #0
+ 8000968:	d003      	beq.n	8000972 <keypad_decode+0x42>
+    data |= bit(1);
+ 800096a:	79bb      	ldrb	r3, [r7, #6]
+ 800096c:	f043 0302 	orr.w	r3, r3, #2
+ 8000970:	71bb      	strb	r3, [r7, #6]
+  if (GPIO_read_pin(D2_Port, D2_Pin))
+ 8000972:	4b3b      	ldr	r3, [pc, #236]	; (8000a60 <keypad_decode+0x130>)
+ 8000974:	681b      	ldr	r3, [r3, #0]
+ 8000976:	2104      	movs	r1, #4
+ 8000978:	4618      	mov	r0, r3
+ 800097a:	f7ff fc98 	bl	80002ae <GPIO_read_pin>
+ 800097e:	4603      	mov	r3, r0
+ 8000980:	2b00      	cmp	r3, #0
+ 8000982:	d003      	beq.n	800098c <keypad_decode+0x5c>
+    data |= bit(2);
+ 8000984:	79bb      	ldrb	r3, [r7, #6]
+ 8000986:	f043 0304 	orr.w	r3, r3, #4
+ 800098a:	71bb      	strb	r3, [r7, #6]
+  if (GPIO_read_pin(D3_Port, D3_Pin))
+ 800098c:	4b35      	ldr	r3, [pc, #212]	; (8000a64 <keypad_decode+0x134>)
+ 800098e:	681b      	ldr	r3, [r3, #0]
+ 8000990:	2100      	movs	r1, #0
+ 8000992:	4618      	mov	r0, r3
+ 8000994:	f7ff fc8b 	bl	80002ae <GPIO_read_pin>
+ 8000998:	4603      	mov	r3, r0
+ 800099a:	2b00      	cmp	r3, #0
+ 800099c:	d003      	beq.n	80009a6 <keypad_decode+0x76>
+    data |= bit(3);
+ 800099e:	79bb      	ldrb	r3, [r7, #6]
+ 80009a0:	f043 0308 	orr.w	r3, r3, #8
+ 80009a4:	71bb      	strb	r3, [r7, #6]
+  // 1 2 3 A
+  // 4 5 6 B
+  // 7 8 9 C
+  // E 0 F D, where E is * and F is #
+
+  switch(data){
+ 80009a6:	79bb      	ldrb	r3, [r7, #6]
+ 80009a8:	2b0f      	cmp	r3, #15
+ 80009aa:	d853      	bhi.n	8000a54 <keypad_decode+0x124>
+ 80009ac:	a201      	add	r2, pc, #4	; (adr r2, 80009b4 <keypad_decode+0x84>)
+ 80009ae:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
+ 80009b2:	bf00      	nop
+ 80009b4:	080009f5 	.word	0x080009f5
+ 80009b8:	080009fb 	.word	0x080009fb
+ 80009bc:	08000a01 	.word	0x08000a01
+ 80009c0:	08000a07 	.word	0x08000a07
+ 80009c4:	08000a0d 	.word	0x08000a0d
+ 80009c8:	08000a13 	.word	0x08000a13
+ 80009cc:	08000a19 	.word	0x08000a19
+ 80009d0:	08000a1f 	.word	0x08000a1f
+ 80009d4:	08000a25 	.word	0x08000a25
+ 80009d8:	08000a2b 	.word	0x08000a2b
+ 80009dc:	08000a31 	.word	0x08000a31
+ 80009e0:	08000a37 	.word	0x08000a37
+ 80009e4:	08000a3d 	.word	0x08000a3d
+ 80009e8:	08000a43 	.word	0x08000a43
+ 80009ec:	08000a49 	.word	0x08000a49
+ 80009f0:	08000a4f 	.word	0x08000a4f
+    case 0x0: key = 0x1; break; // fill out the missing key values (?) in this switch statement
+ 80009f4:	2301      	movs	r3, #1
+ 80009f6:	71fb      	strb	r3, [r7, #7]
+ 80009f8:	e02c      	b.n	8000a54 <keypad_decode+0x124>
+    case 0x1: key = 0x2; break;
+ 80009fa:	2302      	movs	r3, #2
+ 80009fc:	71fb      	strb	r3, [r7, #7]
+ 80009fe:	e029      	b.n	8000a54 <keypad_decode+0x124>
+    case 0x2: key = 0x3; break;
+ 8000a00:	2303      	movs	r3, #3
+ 8000a02:	71fb      	strb	r3, [r7, #7]
+ 8000a04:	e026      	b.n	8000a54 <keypad_decode+0x124>
+    case 0x3: key = 0xA; break;
+ 8000a06:	230a      	movs	r3, #10
+ 8000a08:	71fb      	strb	r3, [r7, #7]
+ 8000a0a:	e023      	b.n	8000a54 <keypad_decode+0x124>
+    case 0x4: key = 0x4; break;
+ 8000a0c:	2304      	movs	r3, #4
+ 8000a0e:	71fb      	strb	r3, [r7, #7]
+ 8000a10:	e020      	b.n	8000a54 <keypad_decode+0x124>
+    case 0x5: key = 0x5; break;
+ 8000a12:	2305      	movs	r3, #5
+ 8000a14:	71fb      	strb	r3, [r7, #7]
+ 8000a16:	e01d      	b.n	8000a54 <keypad_decode+0x124>
+    case 0x6: key = 0x6; break;
+ 8000a18:	2306      	movs	r3, #6
+ 8000a1a:	71fb      	strb	r3, [r7, #7]
+ 8000a1c:	e01a      	b.n	8000a54 <keypad_decode+0x124>
+    case 0x7: key = 0xB; break;
+ 8000a1e:	230b      	movs	r3, #11
+ 8000a20:	71fb      	strb	r3, [r7, #7]
+ 8000a22:	e017      	b.n	8000a54 <keypad_decode+0x124>
+    case 0x8: key = 0x7; break;
+ 8000a24:	2307      	movs	r3, #7
+ 8000a26:	71fb      	strb	r3, [r7, #7]
+ 8000a28:	e014      	b.n	8000a54 <keypad_decode+0x124>
+    case 0x9: key = 0x8; break;
+ 8000a2a:	2308      	movs	r3, #8
+ 8000a2c:	71fb      	strb	r3, [r7, #7]
+ 8000a2e:	e011      	b.n	8000a54 <keypad_decode+0x124>
+    case 0xA: key = 0x9; break;
+ 8000a30:	2309      	movs	r3, #9
+ 8000a32:	71fb      	strb	r3, [r7, #7]
+ 8000a34:	e00e      	b.n	8000a54 <keypad_decode+0x124>
+    case 0xB: key = 0xC; break;
+ 8000a36:	230c      	movs	r3, #12
+ 8000a38:	71fb      	strb	r3, [r7, #7]
+ 8000a3a:	e00b      	b.n	8000a54 <keypad_decode+0x124>
+    case 0xC: key = 0xE; break;
+ 8000a3c:	230e      	movs	r3, #14
+ 8000a3e:	71fb      	strb	r3, [r7, #7]
+ 8000a40:	e008      	b.n	8000a54 <keypad_decode+0x124>
+    case 0xD: key = 0x0; break;
+ 8000a42:	2300      	movs	r3, #0
+ 8000a44:	71fb      	strb	r3, [r7, #7]
+ 8000a46:	e005      	b.n	8000a54 <keypad_decode+0x124>
+    case 0xE: key = 0xF; break;
+ 8000a48:	230f      	movs	r3, #15
+ 8000a4a:	71fb      	strb	r3, [r7, #7]
+ 8000a4c:	e002      	b.n	8000a54 <keypad_decode+0x124>
+    case 0xF: key = 0xD; break;
+ 8000a4e:	230d      	movs	r3, #13
+ 8000a50:	71fb      	strb	r3, [r7, #7]
+ 8000a52:	bf00      	nop
+  }
+
+  return key;
+ 8000a54:	79fb      	ldrb	r3, [r7, #7]
+}
+ 8000a56:	4618      	mov	r0, r3
+ 8000a58:	3708      	adds	r7, #8
+ 8000a5a:	46bd      	mov	sp, r7
+ 8000a5c:	bd80      	pop	{r7, pc}
+ 8000a5e:	bf00      	nop
+ 8000a60:	20000004 	.word	0x20000004
+ 8000a64:	20000008 	.word	0x20000008
+
+08000a68 <Reset_Handler>:
+
+  .section .text.Reset_Handler
+  .weak Reset_Handler
+  .type Reset_Handler, %function
+Reset_Handler:
+  ldr   r0, =_estack
+ 8000a68:	480d      	ldr	r0, [pc, #52]	; (8000aa0 <LoopForever+0x2>)
+  mov   sp, r0          /* set stack pointer */
+ 8000a6a:	4685      	mov	sp, r0
+/* Call the clock system initialization function.*/
+  bl  SystemInit
+ 8000a6c:	f3af 8000 	nop.w
+
+/* Copy the data segment initializers from flash to SRAM */
+  ldr r0, =_sdata
+ 8000a70:	480c      	ldr	r0, [pc, #48]	; (8000aa4 <LoopForever+0x6>)
+  ldr r1, =_edata
+ 8000a72:	490d      	ldr	r1, [pc, #52]	; (8000aa8 <LoopForever+0xa>)
+  ldr r2, =_sidata
+ 8000a74:	4a0d      	ldr	r2, [pc, #52]	; (8000aac <LoopForever+0xe>)
+  movs r3, #0
+ 8000a76:	2300      	movs	r3, #0
+  b LoopCopyDataInit
+ 8000a78:	e002      	b.n	8000a80 <LoopCopyDataInit>
+
+08000a7a <CopyDataInit>:
+
+CopyDataInit:
+  ldr r4, [r2, r3]
+ 8000a7a:	58d4      	ldr	r4, [r2, r3]
+  str r4, [r0, r3]
+ 8000a7c:	50c4      	str	r4, [r0, r3]
+  adds r3, r3, #4
+ 8000a7e:	3304      	adds	r3, #4
+
+08000a80 <LoopCopyDataInit>:
+
+LoopCopyDataInit:
+  adds r4, r0, r3
+ 8000a80:	18c4      	adds	r4, r0, r3
+  cmp r4, r1
+ 8000a82:	428c      	cmp	r4, r1
+  bcc CopyDataInit
+ 8000a84:	d3f9      	bcc.n	8000a7a <CopyDataInit>
+
+/* Zero fill the bss segment. */
+  ldr r2, =_sbss
+ 8000a86:	4a0a      	ldr	r2, [pc, #40]	; (8000ab0 <LoopForever+0x12>)
+  ldr r4, =_ebss
+ 8000a88:	4c0a      	ldr	r4, [pc, #40]	; (8000ab4 <LoopForever+0x16>)
+  movs r3, #0
+ 8000a8a:	2300      	movs	r3, #0
+  b LoopFillZerobss
+ 8000a8c:	e001      	b.n	8000a92 <LoopFillZerobss>
+
+08000a8e <FillZerobss>:
+
+FillZerobss:
+  str  r3, [r2]
+ 8000a8e:	6013      	str	r3, [r2, #0]
+  adds r2, r2, #4
+ 8000a90:	3204      	adds	r2, #4
+
+08000a92 <LoopFillZerobss>:
+
+LoopFillZerobss:
+  cmp r2, r4
+ 8000a92:	42a2      	cmp	r2, r4
+  bcc FillZerobss
+ 8000a94:	d3fb      	bcc.n	8000a8e <FillZerobss>
+
+/* Call static constructors */
+  bl __libc_init_array
+ 8000a96:	f000 f811 	bl	8000abc <__libc_init_array>
+/* Call the application's entry point.*/
+  bl main
+ 8000a9a:	f7ff fc59 	bl	8000350 <main>
+
+08000a9e <LoopForever>:
+
+LoopForever:
+  b LoopForever
+ 8000a9e:	e7fe      	b.n	8000a9e <LoopForever>
+  ldr   r0, =_estack
+ 8000aa0:	20018000 	.word	0x20018000
+  ldr r0, =_sdata
+ 8000aa4:	20000000 	.word	0x20000000
+  ldr r1, =_edata
+ 8000aa8:	20000020 	.word	0x20000020
+  ldr r2, =_sidata
+ 8000aac:	08000b24 	.word	0x08000b24
+  ldr r2, =_sbss
+ 8000ab0:	20000020 	.word	0x20000020
+  ldr r4, =_ebss
+ 8000ab4:	2000009c 	.word	0x2000009c
+
+08000ab8 <ADC1_2_IRQHandler>:
+ * @retval : None
+*/
+  .section .text.Default_Handler,"ax",%progbits
+Default_Handler:
+Infinite_Loop:
+  b Infinite_Loop
+ 8000ab8:	e7fe      	b.n	8000ab8 <ADC1_2_IRQHandler>
+	...
+
+08000abc <__libc_init_array>:
+ 8000abc:	b570      	push	{r4, r5, r6, lr}
+ 8000abe:	4d0d      	ldr	r5, [pc, #52]	; (8000af4 <__libc_init_array+0x38>)
+ 8000ac0:	4c0d      	ldr	r4, [pc, #52]	; (8000af8 <__libc_init_array+0x3c>)
+ 8000ac2:	1b64      	subs	r4, r4, r5
+ 8000ac4:	10a4      	asrs	r4, r4, #2
+ 8000ac6:	2600      	movs	r6, #0
+ 8000ac8:	42a6      	cmp	r6, r4
+ 8000aca:	d109      	bne.n	8000ae0 <__libc_init_array+0x24>
+ 8000acc:	4d0b      	ldr	r5, [pc, #44]	; (8000afc <__libc_init_array+0x40>)
+ 8000ace:	4c0c      	ldr	r4, [pc, #48]	; (8000b00 <__libc_init_array+0x44>)
+ 8000ad0:	f000 f818 	bl	8000b04 <_init>
+ 8000ad4:	1b64      	subs	r4, r4, r5
+ 8000ad6:	10a4      	asrs	r4, r4, #2
+ 8000ad8:	2600      	movs	r6, #0
+ 8000ada:	42a6      	cmp	r6, r4
+ 8000adc:	d105      	bne.n	8000aea <__libc_init_array+0x2e>
+ 8000ade:	bd70      	pop	{r4, r5, r6, pc}
+ 8000ae0:	f855 3b04 	ldr.w	r3, [r5], #4
+ 8000ae4:	4798      	blx	r3
+ 8000ae6:	3601      	adds	r6, #1
+ 8000ae8:	e7ee      	b.n	8000ac8 <__libc_init_array+0xc>
+ 8000aea:	f855 3b04 	ldr.w	r3, [r5], #4
+ 8000aee:	4798      	blx	r3
+ 8000af0:	3601      	adds	r6, #1
+ 8000af2:	e7f2      	b.n	8000ada <__libc_init_array+0x1e>
+ 8000af4:	08000b1c 	.word	0x08000b1c
+ 8000af8:	08000b1c 	.word	0x08000b1c
+ 8000afc:	08000b1c 	.word	0x08000b1c
+ 8000b00:	08000b20 	.word	0x08000b20
+
+08000b04 <_init>:
+ 8000b04:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8000b06:	bf00      	nop
+ 8000b08:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 8000b0a:	bc08      	pop	{r3}
+ 8000b0c:	469e      	mov	lr, r3
+ 8000b0e:	4770      	bx	lr
+
+08000b10 <_fini>:
+ 8000b10:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8000b12:	bf00      	nop
+ 8000b14:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 8000b16:	bc08      	pop	{r3}
+ 8000b18:	469e      	mov	lr, r3
+ 8000b1a:	4770      	bx	lr
